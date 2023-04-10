@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>EDITFORM</title>
+<style>
+
+@font-face {
+    font-family: 'GangwonEdu_OTFBoldA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+body{
+    margin : 0 ;
+    width:100%
+}
+
+.container{	
+	height:100vh;	
+	width:100%;
+	display:inline-flex;
+	font-family: 'GangwonEdu_OTFBoldA';
+    font-size: 20px;
+	margin:auto;
+}
+.content{	
+	width:1100px;	
+	text-align: center;	
+	white-space: nowrap;
+	overflow:auto;
+	border-left: 5px double gray;
+}
+
+.content>.info{	
+	width:700px;
+	line-height:  60px;	
+	text-align: center;
+	padding-right:40px;
+}
+
+h1{
+	font-weight:bold;
+	color:rgb(55, 78, 116);
+}
+
+.info>li>div>.cont{
+	 border-bottom: 2px dashed  rgb(155, 160, 168) ;	
+	 width:500px;
+	 overflow:hidden;
+}
+
+.header{width:100%;height:150px;}
+ul,li{list-style:none; margin:auto;}
+
+.info>li>div>.title{
+	width: 30%;
+	 display:inline-block;
+	float:center;
+}
+
+.info>li{
+	width:100%;
+} 
+
+.valinfo{padding-left:25%; text-align:left}
+
+.info{ border-left:1px solid silver; border-right:1px solid silver;  }
+
+</style>
+</head>
+<link rel="stylesheet" href='/css/linknavi.css'>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2b61f9a26f0c00a855734ad47d35fdb8&libraries=services"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+	
+	$(function(){
+	   $('#newEmail').css('display','none');
+	   $('#editpw').css('display','none');
+	   $('#subPw').css('display','none');
+	   $('#codecheck').css('display','none');
+	   $('#editother').css('display','none');
+	});
+	
+	function putNewMail(){
+		   $('#newEmail').css('display','');
+		   $('#upMailBtn').css('display','none');
+		}
+	
+	function putNewPwd(){
+		   $('#editpw').css('display','');
+		   $('#upPwdBtn').css('display','none');
+		}
+		
+	function putNewOther(){
+		$('#editother').css('display','');
+		
+	}
+	function pwdCheck()
+	{
+	   var pw = $('#pw').val();
+	   var pwCheck = $('#pwCheck').val();
+	   
+	    if(pw != pwCheck)
+	    {
+	       $('#check').html("비밀번호가 일치하지 않습니다.");
+	    }
+	     else 
+	     {
+	       $('#check').html("");
+	       $('#subPw').css('display','');
+	     }	  
+	}
+	
+	function pwUpdated()
+	{			
+		var pastpw = $('#pastpw').val();
+		var pw = $('#pw').val();
+		var uuid = $('#uuid').val();
+		
+		$.ajax({
+				url : '/userinfo/mypwedit',	
+				method : 'post',
+				data : {"uuid":uuid,"pastpw":pastpw,"pw":pw},  											
+				cache : false,		
+				dataType:'json',                      
+				success : function(res)                
+				{		
+					if(res.updated)
+					{						
+						alert(res.msg);
+						location.href='/userinfo/myinfo';
+					}
+					else
+					{
+						alert(res.msg);
+					}
+				},
+				error : function(xhr,status,err)
+				{
+					alert(err);	
+				}
+				});		
+	 }
+
+	function emailCheck()
+	{			
+		var email = $('#email').val();
+		
+		$.ajax({
+				url : '/userinfo/mailCheck',	
+				method : 'post',
+				data : {"email":email},  											
+				cache : false,		
+				dataType:'json',                      
+				success : function(res)                
+				{		
+					if(res.isSent)
+					{						
+						alert(res.msg);
+						$('#codecheck').css('display','');
+					}
+					else
+					{
+						alert(res.msg);
+					}
+				},
+				error : function(xhr,status,err)
+				{
+					alert(err);	
+				}
+				});		
+	 }
+	
+
+	function updateEmail() {
+		var emailcode = $('#emailcode').val();
+		var email = $('#email').val();
+		
+		alert(email);
+		$.ajax({
+	 		url : '/userinfo/codeCheck',
+	 		method:'post',
+	 		data : {"emailcode" : emailcode , "email": email},
+	 		dataType : 'json',
+	 		success : function(res)
+	 		{
+	 			if(res)	{
+	 				alert("이메일 인증완료");
+	 				$('#newEmail').css('display','none');
+	 				$('#codecheck').css('display','none');
+	 				location.reload();
+	 				
+	 			}else alert('이메일 인증실패. 코드를 확인해주세요');
+	 		},
+	 		error : function(xhr,status,err){
+	 			alert(err);
+	 		}
+	 		
+	 	});
+	}
+	
+	
+	function editaddphone()
+	{
+		var address = $('#address').val();
+		var phone = $('#phone').val();
+				
+				$.ajax({
+						url : '/userinfo/editaddphone',	
+						method : 'post',
+						data : {"address":address,"phone":phone},  											
+						cache : false,		
+						dataType:'json',                      
+						success : function(res)                
+						{		
+							if(res.updated)
+							{						
+								alert(res.msg);
+								location.href='/userinfo/myinfo';
+							}
+							else
+							{
+								alert(res.msg);
+							}
+						},
+						error : function(xhr,status,err)
+						{
+							alert(err);	
+						}
+						});		
+		
+	}
+
+	//주소-좌표 변환 객체 생성
+	var geocoder = new kakao.maps.services.Geocoder();
+
+	
+	//주소 검색창
+	function find_address(){
+	    new daum.Postcode({
+	        oncomplete: function(data) {
+	        	var addr = ''; // 주소 변수
+	            var extraAddr = ''; // 참고항목 변수
+
+	            //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+	            if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+	                addr = data.roadAddress;
+	            } else { // 사용자가 지번 주소를 선택했을 경우(J)
+	                addr = data.jibunAddress;
+	            }
+
+	            // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+	            if(data.userSelectedType === 'R'){
+	                // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+	                // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+	                if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+	                    extraAddr += data.bname;
+	                }
+	                // 건물명이 있고, 공동주택일 경우 추가한다.
+	                if(data.buildingName !== '' && data.apartment === 'Y'){
+	                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+	                }
+	                // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+	                if(extraAddr !== ''){
+	                    extraAddr = ' (' + extraAddr + ')';
+	                }
+	            
+	            }
+
+	            // 주소 정보를 해당 필드에 넣는다.
+	           
+	            document.getElementById("address").value = addr;
+	            
+	           $("#address").prop("readonly",true);
+	            var juso =  addr;
+	        	geocoder.addressSearch(juso, callback);  
+	        }
+	    }).open();
+	}
+	// 주소 정보에 해당하는 좌표값을 요청 후 저
+	var callback = function(result, status) {
+		if (status === kakao.maps.services.Status.OK) {
+		   var lng = $("#lng").val(result[0].x); 
+		   var lat = $("#lat").val(result[0].y);
+		}
+	};
+	
+</script>
+
+<body>
+
+ <th:block th:include="@{/thymeleaf/user/Header.html}"></th:block>
+<div class='container'>
+  <div class='navi' th:include="@{/fragments/naviMyinfo.html}"></div>
+
+	<div class='content'>
+	<h1>회원정보 수정</h1>
+		<ul class='info'>
+			
+			<li><div class='valinfo'><span class='title'>ID</span><span class='cont' th:text="${user.uuid}"></span></div></li>
+			
+			<button type='button' id='upPwdBtn' onclick='putNewPwd();'>비밀번호 수정</button>
+			<form id='editpw'>
+				<input type="hidden" id="uuid" name="uuid" th:value="${user.uuid}">
+				<li><label>기존 PWD</label><input id='pastpw' name='pastpw' type="password"></li>
+				<li><label>새로운 PWD</label><input id='pw' name='pw' type="password"></li>
+				<li><label>PWD 확인</label><input id='pwCheck' name='pwCheck' type="password" onkeyup="pwdCheck();"></li>
+				<li><span id="check"></span><li>
+				<button type='button' id='subPw' onclick="pwUpdated();">수정</button>
+			</form>	
+				
+			<li><div class='valinfo'><span class='title'>NAME</span><span class='cont' th:text="${user.name}"></span></div></li>
+			<li><div class='valinfo'><span class='title'>NICKNAME</span><span class='cont' th:text="${user.nickname}"></span></div></li>
+			
+			<li><div class='valinfo'><span class='title'>EMAIL</span><span class='cont' th:text="${user.email}"></span></div></li>
+			<button type="button"  id='upMailBtn' onclick='putNewMail();'>EMAIL수정</button>
+			
+			<form id='newEmail'>
+				<input id='email' name='email' type='text' placeholder='새 EMAIL 주소'>
+				<button type='button' onclick='emailCheck();'>인증메일 전송</button>
+			</form>
+			<form id='codecheck'>
+				<input id='editemail' name='editemail' type='hidden' value=''>
+				<input id='emailcode' name='emailcode' type='text' placeholder='인증번호를 입력하세요'>
+				<button type='button' onclick='updateEmail();'>코드번호입력</button>
+			</form>
+			
+			<li><div class='valinfo'><span class='title'>PHONE</span><span class='cont' th:text="${user.phone}"></span></li>
+			<li><div class='valinfo'><span class='title'>ADDRESS</span><span class='cont' th:text="${user.address}"></span></li>
+			
+			<button type='button' id='upother' onclick='putNewOther();'>주소 및 전화번호 수정</button>
+			<form id='editother'>
+				<label class="valinfo">ADDRESS</label>　
+				<input type="text" size="40" name="address" id="address" class="essential" th:value="${user.address}">
+				<input type="button" onclick="find_address();" value="주소찾기"><br>					
+				<label class="valinfo">PHONE</label>　<input type='text' name='phone' id='phone' th:value="${user.phone}"><p>
+				<button type='button' onclick="editaddphone();">제출</button>		
+			</form>
+			<p>				
+			<button type='reset'>취소</button>
+			<input type="button" value="BACK" onClick="history.go(-1)"> 
+				
+		</ul>	
+	</div>	
+</div>
+ <th:block th:include="@{/thymeleaf/user/Footer.html}"></th:block>
+
+</body>
+</html>

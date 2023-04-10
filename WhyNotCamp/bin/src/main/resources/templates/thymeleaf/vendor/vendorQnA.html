@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>QnA 관리</title>
+<link href="/vendor/css/vendorQnA.css" rel="stylesheet" type="text/css" />
+<style>
+	textarea {width:100%; height: 70px; resize: none;}
+</style>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+function add_answer(qnum)
+{
+	var dat = $('#answerForm'+qnum).serialize();
+	$.ajax({
+ 		url : '/vendor/add_answer',
+ 		method:'post',
+ 		data : dat,
+ 		dataType : 'text',
+ 		success : function(res)	{
+ 			if(res) {
+ 				alert("답변등록완료");
+ 			}
+ 			location.reload();
+ 		},
+ 		error : function(xhr,status,err){
+ 			alert(err);
+ 		}
+ 	});
+}
+</script>
+</head>
+<body>
+<th:block th:include="@{/thymeleaf/vendor/Header.html}"></th:block>
+	<main>
+		<div class="accordion" th:each="map : ${mlist}">
+		    <input type="radio" name="select" class="accordion-select"/>
+		    <div class="accordion-title">
+		    <span th:if="${map.q!=null}">질문 번호: [[${map.q.qnum}]] 질문 내용: [[${map.q.question}]] 등록날짜: [[${map.q.qRegDate}]]</span>
+		    </div>
+		    <div th:if="${map.a.answer!=null}" class="accordion-content"><span>답변: [[${map.a.answer}]] <br> 답변 날짜: [[${map.a.aRegDate}]]</span></div>
+		    <div th:unless="${map.a.answer!=null}" class="accordion-content"><div>
+		    		<form th:id="answerForm+${map.q.qnum}">
+		    			<input type="hidden" name="unum" th:value="${map.q.unum}">
+		    			<input type="hidden" name="qnum" th:value="${map.q.qnum}">
+		    			<input type="hidden" name="cnum" th:value="${map.q.cnum}">
+		    			<textarea name="answer" placeholder="답변"></textarea>
+		    			<button type="button" th:onclick="add_answer([[${map.q.qnum}]]);">답변등록</button>
+		    		</form>
+		    	</div>
+		    </div>
+		</div>
+	</main>
+<th:block th:include="@{/thymeleaf/vendor/Footer.html}"></th:block>
+</body>
+</html>

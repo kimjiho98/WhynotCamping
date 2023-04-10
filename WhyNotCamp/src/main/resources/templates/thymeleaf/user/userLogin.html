@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title></title>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script type="text/javascript">	   
+function logined()
+{                                
+    var obj = $('#login').serialize();
+    $.ajax({
+    	url : '/doLogin',
+ 		method:'post',
+ 		data : obj,
+ 		dataType : 'json',
+       success:function(res){
+          if(res.confirm){
+             history.go(-1);
+               
+          }
+          else{
+             alert("로그인정보를 확인해주세요");   
+          }
+       },
+       error : function(xhr, status, err){
+          alert("로그인 정보를 확인해주세요!");
+       }
+    });         
+} 
+</script>
+<style>
+ul{list-style: none;}
+.btn_login{cursor: pointer;}
+.login .top li{list-style: none;}
+@font-face {
+font-family: dotum;
+src: local('KoPubWorld돋움체 Regular'), url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldDotumMedium.woff2') format('woff2');}
+@font-face {
+font-family: 'KCC-eunyoung';
+src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/KCC-eunyoung-Regular.woff') format('woff');
+font-weight: normal;
+font-style: normal;
+}     
+body{margin: 0; display: block;}
+.login_content{position:relative; width: 500px; height: 500px; border: 3px solid black;  top:200px;left: 700px; background-color: white; display:block; margin-bottom: 300px;} 
+@media screen and (max-width:1600px){.login_content{position: relative; top:100px; left:500px;}} 
+.login_content div.logo{position: relative; font-family: 'KCC-eunyoung'; font-size: 30px;  color: black;  display: flex; justify-content: center; margin-top: 70px;}
+.login_content div.btn{color: black; cursor: pointer; font-size: 20px; position: absolute; left: 470px;margin-top: 10px;}
+.login_content img{width: 100px;  }
+.login_content .top {position: relative; width: 350px; margin-top: 40px; left: 40px; }
+.login_content .top li {padding: 0 0 9px;}
+.login_content .top li label {display: inline-block; width:63px; font-size: 17px; color: #464646; font-family:dotum; font-weight: bold;}
+.login_content .top li input[type='text'],
+.login_content .top li input[type='password'] {width: 146px; height: 25px; border-color: #d9d9d9; border-radius: 10px;}
+.login_content .top a  {position: absolute; right: 0; top: 0;}
+.login_content .top li a {display:block; width:111px; height: 69px; background:#795548;font-size: 18px; color: #fff; line-height: 69px; text-align: center; font-weight: bold; border: 1px;  text-decoration: none; }
+.login_content .top li.save {padding: 0 0 0 69px;}
+.login_content .top li.save label {font-size: 13px; font-weight: normal; width: auto;}
+.login_content .btm {position: relative; left: 100px; height: 40px; width: 200px;}
+.login_content .btm li{  color: #383d41; font-size: 12px; font-family: dotum; margin-bottom: 5px;}
+.login_content .btm li a { font-size: 12px; font-family: dotum; font-weight: bold; color:#795548; text-decoration:underline; margin-left: 10px; }
+
+</style>
+</head>
+<body>
+<th:block th:include="@{/thymeleaf/user/Header.html}"></th:block>
+               <div class="login_content">                  
+                  <div class="logo">
+                     <img src="/img/bonfire.png">Enjoy Your Camping Life!
+                  </div>
+
+
+
+                  <form id='login'>
+                     <ul class="top">
+                        <li><label for='txt1'> 아이디 </label> <input type="text"
+                           name="id" id="txt1" required></li>
+                        <li><label for='txt2'> 비밀번호 </label> <input type="password"
+                           name='pw' id="txt2" required></li>
+                        <li><a class="btn_login" onclick="logined();">로그인</a></li>
+                        <li class="save"><div>
+                             <!--  <input type="checkbox" id="chk1"><label for="chk1">자동로그인</label> -->
+                           </div></li>
+                     </ul>
+                  </form>
+                  <ul class="btm">                
+                        <li>아이디를 잊으셨나요?<a href="">아이디 찾기</a></li>                                   
+                        <li>비밀번호를 잊으셨나요?<a href="">비밀번호 찾기</a></li>                  
+                  </ul>
+
+
+
+               </div>
+               <foot>
+                <th:block th:include="@{/thymeleaf/user/Footer.html}"></th:block>
+				</foot>
+</body>
+
+</html>

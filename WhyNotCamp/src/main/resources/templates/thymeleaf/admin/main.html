@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ADMIN MAIN</title>
+<style>
+body{width:100%; height:100vh;  position: relative;  font-family: 'BMDOHYEON'; margin:0;}
+@font-face {
+    font-family: 'BMDOHYEON';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMDOHYEON.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+</style>
+</head>
+<body>
+<div style='width:100%;text-align:center; height:130px ; line-height:150px;'>
+	<h1 style='font-size:54px;'>ADMIN 홈 화면</h1>
+</div>
+<div style=' width:100%; text-align:right; font-size:23px; border-bottom:5px double gray; padding-bottom:30px;'>[[${session.nickname}]] 님 환영합니다.</div>
+
+<div style='width: 100%; height:80%;'>
+<div style='border:1px solid; width:33%; height:360px; position:absolute; top:30%; left:31%; padding:60px;' >	
+	
+	<div>
+		유저정보찾기
+		<form action='/admin/getUserInfo' method='get'>
+		유저아이디 : <input type='text' name='uid' required> <button type='submit'>찾기</button>
+		</form>
+	</div>
+	<p>
+	
+	<div>
+	유저예약정보찾기
+		<form action='/admin/getUserBook' method='get'>
+			유저아이디 : <input type='text' name='uid' required> <br>
+			예약날짜 : <input type='date' name='regdate' required> <button type='submit'>찾기</button>
+		</form>
+	</div>
+	<p>
+	
+	<div>
+	벤더정보찾기
+		<form action='/admin/getVendorInfo' method='get'>
+		벤더아이디 : <input type='text' name='vid' required> <button type='submit'>찾기</button>
+		</form>
+	</div>
+	<p>
+	
+	<div>
+	벤더캠핑장정보찾기
+		<form action='/admin/getCampInfo' method='get'>
+			벤더아이디 : <input type='text' name='vid' required><br>
+			캠핑장 : <input type='text' name='cname' required> <button type='submit'>찾기</button>
+		</form>
+	</div>
+	<p>
+	<div>
+	 <a th:href="@{'/'+'admin/adminchat'}"><button> 1:1 상담 </button></a>
+	 </div>
+</div>
+
+
+
+
+</div>
+</body>
+</html>

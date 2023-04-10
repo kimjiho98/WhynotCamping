@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vendor 상세정보</title>
+<style type="text/css">
+
+body{display: block; margin: 0; width: 100%; height: 100%; }
+main{ border: 1px solid; width: 1000px; height: auto; font-size: 16px; position: relative; left: 400px; top: 100px; background-color: white;  height: auto; box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px; margin-bottom: 300px;}
+@media screen and (max-width:1600px){main{border: 1px solid; width: 1000px; height: auto; font-size: 15px; position: relative; left: 200px; top: 200px; background-color: white;}} 
+main h1{ position: relative; left: 100px; width: auto; margin-top: 60px; }
+main .info_vendor{ border: 1px solid;   width: 800px; height: auto; position: relative; left: 100px; }
+/*-----------------------------------계정정보쪽--------------------------------------------------------------------------*/
+main .info_vendor .vendor_form{ display: flex; align-items: center; border-bottom: 1px solid; height:80px;}
+main .info_vendor .vendor_form:last-child{border: 0px;}
+main .info_vendor .vendor_form .vendor_formation{ width: 150px; display: flex; justify-content: center; align-items: center; border-right:1px solid black ; height: 80px;  background-color:#eee;}
+main .info_vendor .vendor_form .vendor_write{ width:650px ; display: flex; justify-content: center; align-items: center; }
+/*-----------------------------------------------------------------------------------------------------------------------------------*/
+button{ width: 70px; height: 30px; display: flex; justify-content: center; align-items: center; position: relative; left: 500px; margin-top: 50px; margin-bottom: 50px; border-radius: 50px;  }
+
+
+</style>
+</head>
+<body>
+<th:block th:include="@{/thymeleaf/vendor/Header.html}"></th:block>
+<main>
+   <h1>계정 정보</h1>
+   <div class="info_vendor">
+        
+       <div class="vendor_form"><div class="vendor_formation">이름</div><div class="vendor_write">[[${vendor.vname}]]</div></div>
+       <div class="vendor_form"><div class="vendor_formation">사업자 등록번호</div><div class="vendor_write">[[${vendor.license}]]</div></div>
+       <div class="vendor_form"><div class="vendor_formation">전화번호</div><div class="vendor_write">[[${vendor.phone}]]</div></div>
+       <div class="vendor_form"><div class="vendor_formation">이메일</div><div class="vendor_write">[[${vendor.email}]]</div></div>
+
+    </div>
+        <button type="button" onclick="location.href='/vendor/vendorEdit'">수정</button>
+   
+</main>
+<th:block th:include="@{/thymeleaf/vendor/Footer.html}"></th:block>
+</body>
+</html>

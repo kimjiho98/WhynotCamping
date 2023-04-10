@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymelaf.org">
+<head>
+        <meta charset="utf-8">
+        <style>
+        @font-face {
+    font-family: 'GangwonEdu_OTFBoldA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+body{font-family: 'GangwonEdu_OTFBoldA'; }
+        </style>
+       
+        <title></title>
+</head>
+<body style='margin: 0;  padding: 0;  box-sizing: border-box;'>
+    <div class="container" style='margin: auto; width: 70%;'>
+       <header style='width: 100%; height: 100px; line-height: 100px;
+    		background-color: rgb(246, 219, 109);'>
+           <div class="logo" style=' float:left;height: 100px;'>
+              <img src="cid:bonfire" style='height: 80px; margin: 10px;'>
+           </div>
+           <div class="name" style='float: left;'>
+              <h2>캠핑어때</h2>
+           </div>
+           <div class="booknum" style=' float: right; height: 100px;
+ 			   margin-right: 1em;'>     
+              <label>예약번호</label>
+              <span>[[${book.bnum}]]</span>
+           </div> 
+       </header>
+       <div class="contents" style='background-color: rgb(255, 249, 233);
+    		line-height: 1.5em; font-size: 17px; padding: 1em;'>
+           <div class="top" style=' margin-top: 3em;
+   				width: 100%; height: 150px;'>
+               <div class="msg_icon" style='font-size: 27px;
+    			margin-bottom: 1em;'>
+                   <img src="cid:check_icon"> [캠핑어때]예약 확정 안내</div>
+                   <div class="msg">캠핑어때 [[${book.name}]]님, 안녕하세요<br>
+                        캠핑장 예약이 확정되었습니다
+                    </div>
+                </div>
+                <div class="summary" style='width: 100%;height: 240px;'>
+                    <ul style='list-style: none;'>
+                        <div style=' font-size:23px;padding: 13px;'>
+                        	예약정보</div>
+                        <li>장소 : [[${camp.cname}]]</li>
+                        <li>예약 날짜 : [[${book.checkin}]] ~ [[${book.checkout}]]</li>
+                        <li>예약번호 : [[${book.bnum}]]</li>
+                    </ul>
+                    <a th:href="'/userinfo/booking?bnum='+${book.bnum}"><button style='font-size:23px;
+					    border-width: 1px;
+					    border-radius: 5px;
+					    padding: 0.5em 2em;
+					    margin: 0.5em;
+					    background-color: rgb(254, 196, 151);'>
+					    내 예약 관리</button>
+					</a>
+                </div>
+                <div class="detail" style='width: 100%;
+   						 height: 300px;'>
+                    <div class="dtitle" style='font-size:23px;
+   						 padding: 13px;'>예약 상세정보</div>
+                    <div class="images">
+                    	<img src="cid:logo" style='width:180px;
+						    float: left;
+						    margin-right: 2em;'>
+                    <a th:href="'localhost/search/detail/'+${book.cnum}">[[${camp.cname}]]</a>
+                    <a th:href="'localhost/search/map?keyword='+${camp.cname}">지도에서 위치 확인</a>
+                    </div>
+                    <div style='padding: 0.5em;'>
+                        <label>사이트 이름</label>
+                        [[${book.sname}]]
+                    </div>
+                    <div style='padding: 0.5em;'>
+                        <label>체크인</label>
+                        [[${book.checkin}]], [[${camp.in_time}]]시 부터
+                    </div>
+                    <div style='padding: 0.5em;'>
+                        <label>체크아웃</label>
+                        [[${book.checkout}]], [[${camp.out_time}]]시 까지
+                    </div>
+                    <div style='padding: 0.5em;'>
+                        <label>총 가격</label>
+                        ₩ [[${book.ttlprice}]]
+                    </div>
+                </div>
+                <div class="facilities" style='width: 100%;
+    height: 300px;'>
+                    <h3 style='font-size:23px;
+    padding: 13px;'>캠핑장 이용 수칙</h3>
+                    <div class="possible" style='float: left;
+    padding: 1em;'>
+                        <h4 style='font-size:20px;
+    padding-bottom: 10px;'>이용 가능한 시설<br></h4>
+                        <span th:if="${facility.pet==1}">🐕반려견 입장<br></span>
+                        <span th:if="${facility.cook==1}">🍴개별 주방<br></span>
+                        <span th:if="${facility.bbq==1}">🍖바베큐<br></span>
+                        <span th:if="${facility.fire==1}">🔥캠프파이어<br></span>
+                        <span th:if="${facility.wifi==1}">📡와이파이<br></span>
+                        <span th:if="${facility.toilet==1}">🚻개별 화장실<br></span>
+                    </div>
+                    <div class="impossible" style='float: left;
+    padding: 1em;'>
+                        <h4 style='font-size:20px;
+                        padding-bottom: 10px;'>이용 불가능한 시설<br></h4>
+                        <span th:if="${facility.pet==0}">❌반려견 입장<br></span>
+                        <span th:if="${facility.cook==0}">❌개별 주방<br></span>
+                        <span th:if="${facility.bbq==0}">❌바베큐<br></span>
+                        <span th:if="${facility.fire==0}">❌캠프파이어<br></span>
+                        <span th:if="${facility.wifi==0}">❌와이파이<br></span>
+                        <span th:if="${facility.toilet==0}">❌개별 화장실<br></span>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </body>
+</html>

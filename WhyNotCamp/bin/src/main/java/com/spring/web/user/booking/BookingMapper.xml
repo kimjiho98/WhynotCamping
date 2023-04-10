@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.web.user.booking.BookingMapper">
+
+	<select id="findBooking"
+		parameterType="Integer"
+		resultType="com.spring.web.vendor.vo.Booking">
+		SELECT * FROM booking WHERE bnum=#{bnum}
+	</select>
+
+	<select id="findBnum"
+		resultType="integer">
+		SELECT
+		    BOOKING_SEQ.NEXTVAL
+		FROM
+		    dual
+	</select>
+	
+	<select id="roomAvailable" resultType="map">
+	    SELECT snum, COUNT(*) AS num_reservations FROM booking
+	    WHERE cnum = #{cnum}
+	    AND checkout <![CDATA[>]]>#{checkin}
+	    AND checkin <![CDATA[<]]> #{checkout}
+	    GROUP BY snum
+	</select>
+	
+
+	<select id="campDetail"
+            parameterType="integer"
+            resultType="map">
+         SELECT m.*, a.anum, a.fname , 
+         s.snum,s.sname, s.bookable, s.max_ppl, s.price
+         , r.rnum,r.nickname, r.content, r.score, r.regdate 
+         FROM camping_main m LEFT JOIN c_attach a    
+         					ON m.cnum=a.cnum
+         					LEFT JOIN camping_site s
+         					ON m.cnum = s.cnum
+         					LEFT JOIN review r
+         					ON m.cnum = r.cnum
+         				WHERE m.cnum=#{cnum}         
+   </select>
+
+	<select id="scoreAvg"
+		 parameterType="integer"
+		resultType="Float">
+		SELECT AVG(score) FROM review WHERE cnum=#{cnum}
+	</select>
+	
+	<insert id='putBooking'
+		parameterType="com.spring.web.vendor.vo.Booking">
+        INSERT INTO booking(bnum, cnum, unum,snum,sname, checkin, checkout, ppl, ttlprice)
+      VALUES(#{bnum}, #{cnum}, #{unum},#{snum},#{sname},#{checkin}, #{checkout}, #{ppl}, #{ttlprice})
+      
+   </insert>
+   
+   <select id="bookSummary"
+            parameterType="integer"
+            resultType="map">
+         SELECT m.cnum, m.cname, m.address,  
+         b.bnum,b.sname, b.checkin, b.checkout, b.ttlprice,b.ppl
+         , u.unum, u.name, u.email, u.phone
+         FROM booking b LEFT JOIN users u    
+         					ON u.unum=b.unum
+         					LEFT JOIN camping_main m
+         					ON m.cnum = b.cnum
+         				WHERE b.bnum=#{bnum}         
+   </select>
+	<select id="getFacility"
+		parameterType="Integer"
+		resultType="map">
+		SELECT f.*,in_time,out_time FROM facilities f 
+		INNER JOIN camping_main c on f.cnum=c.cnum WHERE c.cnum=#{cnum}
+	</select>
+	
+	<select id="getCampingMain"
+			resultType="com.spring.web.vendor.vo.CampingMain">
+			SELECT * FROM camping_main WHERE cnum=#{cnum}
+			</select>
+
+	<update id="bookConfirm"
+		parameterType="com.spring.web.vendor.vo.Booking">
+		 UPDATE booking SET confirm=#{confirm}, name=#{name},phone=#{phone}
+		 WHERE bnum=#{bnum}
+	</update>
+	
+</mapper>

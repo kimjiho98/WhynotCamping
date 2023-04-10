@@ -1,0 +1,254 @@
+@charset "UTF-8";
+
+
+/*review css*/
+.js-load {
+   display: none;
+    position:absolute;
+   top: -120px;
+   padding:10px 10px;
+   width: 100%;
+}
+
+.js-load.active {
+   display: block;
+}
+.js-load:after {
+   display: center;
+}
+
+ul.menu li { list-style:none;  position:relative; 
+             display:center; justify-content:center; width:103%; margin: 0 -39px; }
+
+       
+/*attach css*/
+.slide-img img { 
+   width: 550px; height: 300px; object-fit: cover; 
+    
+}
+
+
+/* Slideshow container */
+.slideshow-container {
+    width: 500px;
+    height : 185px;
+    /* position: relative;
+    margin: 0 auto; */
+     margin-right: 5px ;
+    
+  }
+ 
+  /* Hide the images by default */
+  .mySlides {
+    display: none;
+    
+    
+  }
+  
+  /* Next & previous buttons */
+ slideshow-container .prev, slideshow-container .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    margin-top: -22px;
+    padding: 15px;
+    color: black;
+    font-weight: bold;
+    font-size: 16px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+  }
+  
+  /* Position the "next button" to the right */
+  .next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+  }
+  .prev {
+    left: 0;
+    border-radius: 3px 0 0 3px;
+  }
+  
+  /* On hover, add a black background color with a little bit see-through */
+  .prev:hover, .next:hover {
+    background-color: rgba(0,0,0,0.8);
+  }
+ 
+  
+  
+  
+  /* Caption text */
+  .text {
+    color: #f2f2f2;
+    font-size: 15px;
+    padding: 8px 12px;
+    position: absolute;
+    bottom: 8px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  /* Number text (1/3 etc) */
+  .numbertext {
+    color: #f2f2f2;
+    font-size: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    top: 0;
+  }
+  /* The dots/bullets/indicators */
+  .dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 135px 2px;
+    background-color: #bbb;
+    border-radius: 20%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+  }
+  
+  dot.active, .dot:hover {
+    background-color: #717171;
+  }
+  
+  /* Fading animation */
+  .fade {
+  height:300px;
+    animation-name: fade;
+    animation-duration: 1.5s;
+  }
+  
+  @keyframes fade {
+    from {opacity: .4}
+    to {opacity: 1}
+  }
+  
+/*배너*/
+
+.banner {
+    border-bottom:1px solid gray;
+    margin: 0;
+  position:relative;
+  text-align:center;
+  
+}
+.link{font-family: 'GangwonEdu_OTFBoldA'; font-size:23px;}
+
+.banner-subject .list_place > li
+{
+    list-style: none;
+    padding-left: 0px;   
+    display: inline;
+    margin-right:18px;
+    padding-right:10px;
+}
+.banner-subject .list_place > li>a {text-decoration:none; color:  #2c3d51; font-family: 'GangwonEdu_OTFBoldA'; font-size:23px;}
+
+
+.list_facility li > div> img 
+{
+   width:35px;
+   height:35px;
+   
+   
+}   
+.list_facility 
+{
+   display:flex;
+   margin-left: -30px;
+}
+.list_facility li
+{
+   list-style: none; /*li 점 삭*/ 
+    padding-left: 0px;
+    display: inline;
+    margin-right:15px;
+    text-align:center;
+   
+}   
+.color_g
+{
+   font-size:11px;
+   
+}
+
+.reserv-btn
+{   width:50%;
+   float: center; margin: 15px 100px 1.2em ; 
+   padding-right: 1.2em; padding-left: 1.2em; 
+}
+.btn {font-size: 18px; white-space:nowrap; 
+width:100%; padding:.8em 1em; 
+font-family: Open Sans, Helvetica,Arial,sans-serif; 
+line-height:18px; display: inline-block;zoom: 1; 
+color: #fff; text-align: center; position:relative; 
+-webkit-transition: border .25s linear, color .25s linear, background-color .25s linear; 
+transition: border .25s linear, color .25s linear, background-color .25s linear;}
+
+.btn.btn-dark{background-color: #2c3d51; font-family: 'GangwonEduSaeeum_OTFMediumA'; font-size:25px; border-color: #2c3d51; -webkit-box-shadow: 0 3px 0 #080c0f; box-shadow: 0 3px 0 #080c0f;}
+.btn.btn-dark:hover{background-color:#202d3d;}
+.btn.btn-dark:active{top: 3px; outline: none; -webkit-box-shadow: none; box-shadow: none;}
+
+.btn.btn-white{font-family: 'GangwonEduSaeeum_OTFMediumA'; font-size:25px; background-color: rgb(199, 193, 193); border-color: #fff;}
+.btn.btn-white:hover{background-color:#202d3d;}
+.btn.btn-white:active{top: 3px; outline: none; -webkit-box-shadow: none; box-shadow: none;}
+
+
+.more-btn{
+   width:60%;
+   float: left; margin: -100px 80px 1.2em; 
+   padding-right: 1.2em; padding-left: 1.2em; 
+   font-size: 15px; white-space:nowrap; 
+   
+
+}
+
+.btn-wrap {
+   display: block;
+}
+
+
+main
+{
+   width: 550px;
+   padding-top: 16px;
+   margin: 0 auto;
+}
+
+@font-face {
+    font-family: 'GangwonEdu_OTFBoldA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'GangwonEduSaeeum_OTFMediumA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduSaeeum_OTFMediumA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+h2,h3,h4
+{
+	font-family: 'GangwonEdu_OTFBoldA';
+	font-size: 20px;
+}
+h4
+{
+	font-family: 'GangwonEdu_OTFBoldA';
+	font-size: 16px;
+}
+
+.txt_address,.time_operation,.txt_operation,.txt_contact
+{
+	font-family: 'GangwonEduSaeeum_OTFMediumA';
+	font-size:25px;
+}
+.tit_location
+{
+	text-decoration-line: underline; text-decoration-style: double; 
+    text-decoration-color: #D5D5D5;  text-underline-position : under; font-size:34px;
+}
+

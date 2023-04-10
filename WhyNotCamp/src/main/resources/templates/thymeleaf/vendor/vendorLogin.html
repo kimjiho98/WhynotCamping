@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>로그인</title>
+<style>
+body{background-image: url(/img/background.png); display: flex; justify-content: center;  }
+.section{ border: 1px solid black; width: 400px; height:730px; border-radius: 0.5px;  box-shadow: 0 1px 3px rgb(0, 0, 0/20%); display: block; background-color: white;  margin-top: 5%;}
+.section .section_text{ display: flex; align-items: center; position: relative; top: 50px; left: 70px; font-size: 30px; font-weight: 900; }
+.section .section_text_2{position: relative; text-align: center; top: 50px; font-size: 18px; font-weight: 900;} 
+.section .logform{ display:flex; justify-content: center; align-items: center; position: relative; top: 70px;}
+.section .logform input{ width: 230px; height:50px; font-size: 16px; padding:0 10px 0 10px;}
+.section .logform input{margin-top: 20px;}
+.section .logform .section_text_5 {width: 250px; height: 50px;  background-color: greenyellow; margin-top: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer;}
+.section .section_text_6 {display: flex; justify-content: center; position: relative; top: 90px; font-size: 13px; }
+.section .section_text_6 a:first-child{ margin-right: 10px;color: green;  text-decoration: none; }
+.section .section_text_6 a:last-child{padding-left: 10px; border-left: 1px solid black;color: green;  text-decoration: none;}
+.section .section_text_7{display: flex; position:relative; }
+.section hr{width:320px; position: relative; top: 120px;   }
+.section .section_text_7 {position: relative; display: inline-block; justify-content: center; align-items: center; top: 100px;  background-color: white; left: 120px; color: slategray; }
+.section .section_text_8{display: flex; position: relative; justify-content: center; align-items: center; top: 120px; width: 250px; height: 50px; border: 1px solid green; left: 70px; font-size: 18px; }
+.section .section_text_8 a{text-decoration: none; color: green;}
+.section .section_text_9{display: flex; justify-content: center; position: relative; top: 150px; font-size: 16px;}
+.section .section_text_9 a {font-size: 16px; font-weight: 900;}
+.section .section_text_10 {font-size: 12px; display: flex; justify-content: center;  position: relative; top: 160px;}
+.section .section_text_11 {position:relative; display: flex; justify-content: center; top: 180px;}
+.section .section_text_11 img{width: 20px;height: 20px; margin-right: 5px;}
+</style>
+<script src="https://code.jquery.com/jquery-3.6.2.js" integrity="sha256-pkn2CUZmheSeyssYw3vMp1+xyub4m+e+QK4sQskvuo4=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+function login()
+{
+	var ser = $('#loginForm').serialize();
+	$.ajax({
+ 		url : '/doLogin',
+ 		method:'post',
+ 		data : ser,
+ 		dataType : 'json',
+ 		success : function(res)	{
+ 			var msg = res.confirm ? "로그인 성공" : "실패ㅜㅜ";
+ 			alert(msg);
+ 			if(res.confirm) {
+ 				location.href='/vendor/main';
+ 			}
+ 		},
+ 		error : function(xhr,status,err){
+ 			alert('로그인 실패');
+ 		}
+ 	});
+}
+</script>
+</head>
+<body>
+ <div class="section">
+  <div class="section_text"><img src="/img/camp.png">캠핑어때</div>
+  <div class="section_text_2">사업자 로그인</div>
+    <div class="logform">  
+	    <form id="loginForm">
+		    <div class="section_text_3"><input type="text" name="id" placeholder="아이디를 입력해주세요"></div>
+		    <div class="section_text_4"><input type="password" name="pw" placeholder="비밀번호를 입력해주세요" 
+		    	onkeypress="javascript:if(event.keyCode == 13){login();}"></div>
+		    <div class="section_text_5" onclick="login();">로그인</div>
+	    </form>
+    </div>
+    <div class="section_text_6"><a href="">아이디 찾기</a><a href="">비밀번호 찾기</a></div>
+    <hr>
+    <a class="section_text_7">판매자가 아니신가요?</a>
+    <div class="section_text_8"><a href="/vendor/join">판매자 회원가입</a></div>
+    <div class="section_text_9">판매자 콜센터 <a>1600-0000</a> </div>
+    <div class="section_text_10">판매자 개인정보 처리방침</div>
+    <div class="section_text_11"><img src="/img/earth.png"><select><option>한국어</option><option>English</option><option>中文简体</option></select></div>
+</div>    
+</body>
+</html>

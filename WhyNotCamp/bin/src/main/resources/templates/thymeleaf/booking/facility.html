@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>캠핑장 이용 수칙</title>
+</head>
+<body>
+	<h3>캠핑장 이용 수칙</h3>
+	<div>
+		<p>
+			<ul>체크인/체크아웃 시간<br>
+				<li>체크인 : [[${in_time}]]시 ~ 23시<br></li>
+				<li>체크아웃 : 2시 ~ [[${out_time}]]시<br></li>
+				<span>해당 시간을 지켜주세요</span>
+			</ul>
+		</p>
+		<p>
+			<span>이용 가능한 시설<br></span>
+			<span th:if="${facility.pet==1}">🐕반려견 입장<br></span>
+			<span th:if="${facility.cook==1}">🍴개별 주방<br></span>
+			<span th:if="${facility.bbq==1}">🍖바베큐<br></span>
+			<span th:if="${facility.fire==1}">🔥캠프파이어<br></span>
+			<span th:if="${facility.wifi==1}">📡와이파이<br></span>
+			<span th:if="${facility.toilet==1}">🚻개별 화장실<br></span>
+		</p>
+		<p>
+			<span>이용 불가능한 시설<br></span>
+			<span th:if="${facility.pet==0}">❌반려견 입장<br></span>
+			<span th:if="${facility.cook==0}">❌개별 주방<br></span>
+			<span th:if="${facility.bbq==0}">❌바베큐<br></span>
+			<span th:if="${facility.fire==0}">❌캠프파이어<br></span>
+			<span th:if="${facility.wifi==0}">❌와이파이<br></span>
+			<span th:if="${facility.toilet==0}">❌개별 화장실<br></span>
+		</p>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <title>Document</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/market/carrot.png">
+    <script type="text/javascript">
+     //함수 실행
+    
+    function reloadDivArea() { //특정부분 새로고침
+        $('#object').load(location.href+' #object');
+    }
+
+    function checkOnlyOne(element) { //일단 하나만 체크되는걸로 ...
+  
+  const checkboxes 
+      = document.getElementsByName("category");
+  
+  checkboxes.forEach((cb) => {
+    cb.checked = false;
+  })
+  
+  element.checked = true;
+}
+    
+    </script>
+    <style>
+        
+        body{margin: 0; background-color: #f8f9fa; }
+.subnav{width: 1100px; height: 100px;  display: flex; position: relative; left: 350px; align-items: center; justify-content: center; font-weight: 900; font-size: large;}
+@media screen and (max-width:1600px){.subnav{position: relative; left: 160px;}}
+.subnav .subnav_1 a{color: coral; font-size: 25px; cursor: pointer; text-decoration:underline;}
+.subnav .subnav_2{margin-left: 100px; cursor: pointer;}
+.subnav .subnav_2 a{color: black; text-decoration: none; font-size: 17px; }
+        /*----------------------------------상세검색폼----------------------------------------------*/
+        span{font-size:13px ; position: relative; top: 10px;left: 530px; padding-left: 20px; color:#ff7200  ;}
+        @media screen and (max-width:1600px) {span{font-size:13px ; position: relative; left: 280px;}}
+        .title{font-size: 25px; color: black;}
+        .search{width:800px;height: 200px; border: 1px solid gray; position: relative; top: 20px; left: 550px;border-bottom: 0; }
+        @media screen and (max-width:1600px) {.search{width:800px;height: 200px;  position: relative; top: 20px; left: 300px;}}
+        .search .title input{width: 300px; height: 30px; border-radius: 20px; border: 1px solid coral; position: relative; left: 25px; top: 10px; padding-left: 20px; }
+        .categories_1{width: 600px; height: 30px; position: relative;  margin-top: 20px; }
+        .categories_2{width: 800px; height: 30px; position: relative;  margin-top: 10px; }
+        input[type="checkbox"] {margin-left: 20px; border: 1px solid; width: 30px; }
+        .submit{background-color:#ffcc99 ; border: 1px solid gainsboro; position: relative; left: 350px; top: 30px; cursor: pointer; width: 100px;height: 30px;}
+        /*--------------------------------------------------------------------------------------*/
+        .main{width: 800px; height: auto; position: relative; left: 550px; border: 1px solid gray; top: 20px; display: flex; flex-direction: column;}
+        @media screen and (max-width:1600px){.main{position: relative; left: 300px; }}
+        .orderby{ display: flex; flex-direction: row; list-style: none; font-size: 14px; color: gray; margin-bottom: 30px;}
+        .orderby li{padding: 0px 10px 0px; border-left: 1px solid gray; cursor: pointer;}
+        .orderby li:first-child {border-left: 0px;}
+        /*-----------------------------------------------------------------------------------------*/
+        .object{width: 800px; height: 150px; display: flex;}
+        .object a{width:800px; height: 150px; display: flex; text-decoration: none;}
+        .object .photo{width: 150px;height: 150px; border-right: 1px solid gray;}
+        .object img{width:150px;height: 150px;}
+        .object .text {width: 500px;height: 150px; border-right: 1px solid  gray; }
+        .object .text .title{width: 500px; height: 50px; border-top: 1px solid gray; display: flex; align-items: center; overflow: hidden; font-size: 15px; padding-left: 20px;}
+        .object .text .content{width: 500px; height:100px; display: flex; overflow-wrap: break-word; overflow: hidden; font-size: 17px; padding-left: 20px; color:coral; font-weight: 700; align-items: center;}
+        .object .price{width: 150px; height: 150px; display: flex; align-items: center; border-top: 1px solid gray; font-size: 17px; color:#ff7200; justify-content: center; overflow-wrap: break-word;}
+    </style>
+</head>
+<body > 
+<div class="subnav">
+    <div class="subnav_1"><a href="/market/purchase">구매하기</a></div>
+    <div class="subnav_2"><a href="/market/sellform">판매하기</a></div>
+</div>
+    <span class="title">상세검색</span><span>옵션을 선택해서 검색해볼까요?</span>
+    <form id="submitform" action="/market/deepinfo" method="post" >
+    <div class="search">
+        <div class="title"><input type="text" placeholder="찾으시는 물품이 있으신가요?"name="title"></div>
+        <div class="categories_1">
+                                    <input type="checkbox"
+                                        name="category"
+                                        value="tent"
+                                        style="zoom:1.3;"
+                                        onclick="checkOnlyOne(this)"/>텐트
+                                            <input type="checkbox"
+                                            name="category"
+                                            value="bed"
+                                            style="zoom:1.3;"
+                                            onclick="checkOnlyOne(this)"/>침낭
+                                                <input type="checkbox"
+                                                name="category"
+                                                value="chair"
+                                                style="zoom:1.3;"
+                                                onclick="checkOnlyOne(this)"/>의자
+                                                    <input type="checkbox"
+                                                    name="category"
+                                                    value="lamp"
+                                                    style="zoom:1.3;"
+                                                    onclick="checkOnlyOne(this)"/>조명등
+                                                        <input type="checkbox"
+                                                        name="category"
+                                                        value="bbq"
+                                                        style="zoom:1.3;"
+                                                        onclick="checkOnlyOne(this)"/>그릴
+        </div>
+        <div class="categories_2">
+            <input type="checkbox"
+            name="category"
+            value="kichen"
+            style="zoom:1.3;"
+            onclick="checkOnlyOne(this)"/>주방용품
+                <input type="checkbox"
+                name="category"
+                value="seasonal"
+                style="zoom:1.3;"
+                onclick="checkOnlyOne(this)"/>계절용품
+                    <input type="checkbox"
+                    name="category"
+                    value="storage"
+                    style="zoom:1.3;"
+                    onclick="checkOnlyOne(this)"/>수납용품
+                        <input type="checkbox"
+                        name="category"
+                        value="rv"
+                        style="zoom:1.3;"
+                        onclick="checkOnlyOne(this)"/>RV용품
+                            <input type="checkbox"
+                            name="category"
+                            value="accesory"
+                            style="zoom:1.3;"
+                            onclick="checkOnlyOne(this)"/>악세서리
+        </div>
+        <button class="submit" type="submit" >검색하기</button>
+    </div>
+    </form>
+    
+    <div id="main" class="main">
+        <ul class="orderby">
+            <li>인기상품순</li>
+            <li>최근등록된순</li>
+            <li>낮은 가격순</li>
+            <li>높은 가격순</li>
+        </ul>
+        
+        <div id="object"class="object" th:each="att : ${list}">
+            <a th:href="@{/market/detail(mnum=${att.m.mnum})}">
+            	<div class="photo"><img th:src="'/market/personal/'+${att.m.title}+'/'+${att.a.fname}">     </div>
+                	<div class="text">   
+                        <div class="title" th:text="${att.m.title}"></div>
+                        <div class="content" th:text="${att.m.region}"></div>
+                	</div>                        
+   					<div class="price" th:text="${att.m.price}"></div>
+        	</a>
+        </div>
+        
+    </div>
+</body>
+</html>

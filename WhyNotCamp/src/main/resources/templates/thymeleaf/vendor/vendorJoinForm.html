@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vendor 회원가입</title>
+<style>
+        @font-face {
+    font-family: 'FlowerSalt';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2210-2@1.0/FlowerSalt.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+         body{margin: 0; justify-content: center; display: flex;}
+        .regform{width: 500px; height: 1200px; border: 2px solid rgba(0, 0, 0, 0.283); display: block; border-radius: 10px; position:absolute; top: 55px; } 
+        .regform_text_1 {font-family: 'FlowerSalt'; font-size: 20px; color: brown; display: flex; justify-content: center;position: relative; top: 50px;}
+        .regform_text_2{display: flex; justify-content: center; position: relative; top: 80px; font-size: 25px;}
+        .regform_text_3{display: flex; justify-content: center; position: relative; top: 85px; font-size: 25px;}
+        .reg_data{position: relative; top: 120px; left: 90px;   }
+        .reg_data input{width: 300px; height: 50px; padding-left: 10px; margin-top: 10px;}
+        .reg_data div:nth-child(1) input{width: 250px;}
+        .reg_data div:nth-child(1){display: flex; align-items: center;}
+        .reg_data div:nth-child(1) div:last-child{background-color: beige; padding: 16px; position: relative; top:5px; border: 1px solid gray; border-left: 0px;}
+        .reg_data div:nth-child(6) input{width: 200px;}
+        .reg_data div:nth-child(6){display: flex; align-items: center;}
+        .reg_data div:nth-child(6) div:last-child{background-color: beige; padding: 16px; position: relative; top:5px; border: 1px solid gray; border-left: 0px;}
+        .reg_data .check {height: 10px;}
+        .regform_text_4{font-weight: 900; display: flex;justify-content: start; position: relative; top: 130px; width: 350px;left: 90px;}
+        .regform_text_4 input{width: 20px; height: 20px; font-size: 20px; }
+        .regform_text_5{overflow:auto; font-size: 13px;  position: relative; top: 140px; width: 320px; left: 90px;}
+        .regform_text_6{overflow: auto; position: relative; top: 170px;}
+        .regform_text_7{ position: relative; top: 160px;font-size: 13px;} 
+        .regform_text_7 li{margin-top: 5px;}
+        .regform_text_8{position: relative; display: flex; justify-content: center; top: 170px; background-color: gray; width: 300px; height: 60px; align-items: center;left: 100px; cursor: pointer;}
+        .regform_text_9{position: relative; top: 200px; left: 100px;}
+        .regform_text_9 a{color: gray;}
+        h6 {color: red;}
+</style>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+$(function(){$('#verify').css('display','none');});
+
+function allcheck() {
+	if($(".allcheck").is(":checked")) $(".plzcheck1").prop("checked", true);
+	else $(".plzcheck1").prop("checked",false);
+};   
+
+var check = false;
+var email_check = false;
+
+function searchFunction() // 비밀번호 확인
+{
+   var pw = $('#pwd').val();
+   var pw2 = $('#pwd2').val();
+   
+    if(pw != pw2)
+    {
+       $('#checkMessage').html("비밀번호가 일치하지 않습니다.");
+    }
+     else 
+     {
+       $('#checkMessage').html("");
+     }
+}
+
+function join() // 회원가입 ajax
+{
+	if(check && email_check){
+		if(confirm('등록하시겠습니까?')){
+			var ser = $('#joinForm').serialize();
+			$.ajax({
+		 		url : '/vendor/join',
+		 		method:'post',
+		 		data : ser,
+		 		dataType : 'json',
+		 		success : function(res)
+		 		{
+		 			var msg = res.suc ? "등록 성공" : "등록 실패";
+		 			alert(msg);
+		 			location.href='/vendor/login';
+		 		},
+		 		error : function(xhr,status,err){
+		 			alert(err);
+		 		}
+		 		
+		 	});
+		}
+	}  else if(!check) {
+		alert("아이디 중복확인 후 가능합니다");
+	} else if(!email_check){
+		alert("이메일 인증을 해주세요");
+	} 
+}
+
+function vid_check(){      // 아이디 중복체크
+	var vid = $('#vid').val();
+	$.ajax({
+ 		url : 'vidcheck/'+vid,
+ 		method:'post',
+ 		dataType : 'json',
+ 		success : function(res)
+ 		{
+ 			if(!res.ok)	{
+ 				alert("사용가능한 아이디 입니다");
+				check=true;
+ 			}else alert('이미 사용중인 아이디 입니다');
+ 		},
+ 		error : function(xhr,status,err){
+ 			alert(err);
+ 		}
+ 		
+ 	});
+}
+
+function sendEmail() {
+	var email = $('#email').val();
+	$.ajax({
+ 		url : 'sendEmail/'+email,
+ 		method:'post',
+ 		dataType : 'json',
+ 		success : function(res)
+ 		{
+ 			if(res)	{
+ 				alert("이메일 전송완료");
+ 				$('#verify').css('display','');
+ 				
+ 			}else alert('이메일 전송실패');
+ 		},
+ 		error : function(xhr,status,err){
+ 			alert(err);
+ 		}
+ 		
+ 	});
+}
+
+function email_verify() {
+	var code = $('#code').val();
+	$.ajax({
+ 		url : 'verifyEmail/'+code,
+ 		method:'post',
+ 		dataType : 'json',
+ 		success : function(res)
+ 		{
+ 			if(res)	{
+ 				alert("이메일 인증완료");
+ 				$('#verify').css('display','none');
+ 				$('#send_btn').css('display','none');
+ 				email_check = true;
+ 			}else alert('이메일 인증실패. 코드를 확인해주세요');
+ 		},
+ 		error : function(xhr,status,err){
+ 			alert(err);
+ 		}
+ 		
+ 	});
+}
+</script>
+<body>
+    <div class="regform">
+         <div class="regform_text_1">Camping　Place</div>
+         <div class="regform_text_2">캠핑어때와 함께 </div>
+         <div class="regform_text_3">비즈니스를 시작하세요!</div>
+            <div class="reg_data">
+                <form id="joinForm" class="joinForm">
+                <div><input id="vid" name="vid" type="text" placeholder="아이디" required><button onclick="vid_check();">중복확인</button></div>
+                <div><input id="pwd" name="pwd" type="password" required placeholder="비밀번호(영문+숫자+특수문자,8-15글자)"></div>
+                <div><input id="pwd2" name="pwd2" type="password" required placeholder="비밀번호확인" onkeyup="searchFunction();"></div>
+                <div class="check"><h6 id="checkMessage"></h6></div>
+                <div><input name="vname" type="text" required placeholder="이름"></div>
+                <div><input id="email" name="email" type="text" required placeholder="이메일"><button id="send_btn" type="button" onclick="sendEmail();">인증요청</button></div>
+                <div id="verify"><input type="text" id="code" name="code" placeholder="인증코드"><button onclick="email_verify()">인증</button></div>
+                <div><input name="phone" type="text" required placeholder="핸드폰번호"></div>
+                <div><input name="license" type="text" required placeholder="사업장등록번호"></div>
+                </form>
+            </div>
+        <div class="regform_text_4"><input class="allcheck"type="checkbox" onclick="allcheck();">모두 동의합니다</div>
+        <div class="regform_text_5">모두 동의에는 필수 및 선택 목적(광고성 정보 수신 포함)에 대한 동의가 포함되어있으며, 선택 목적에 동의를 거부하시는 경우에도 서비스 이용이 가능합니다.</div>
+        
+        <div class="regform_text_6">
+        <hr>
+            <div><input class="plzcheck1"name='chk' type="checkbox" required>[필수] 만 19세 이상입니다</div>
+            <div><input class="plzcheck1"name='chk' type="checkbox" required>[필수] 판매 이용약관</div>
+            <div><input class="plzcheck1"name='chk' type="checkbox" required>[필수] 캠핑페이(주) 전자금융거래 이용 약관</div>
+            <div><input class="plzcheck2" type="checkbox" >[선택] 광고 및 이벤트 목적의 개인정보 수집 및 이용 동의 </div>
+            <div><input class="plzcheck2" type="checkbox">[선택] 판매자 무료 교육 및 특별 프로모션 헤택(광고) 수신 동의 </div>
+        <hr>
+        </div>
+        <ul class="regform_text_7">
+            √ 확인해주세요!
+            <li>수신거부 시 판매에 도움이 되는 정보를 받아보실 수 없습니다.</li>
+            <li>광고성 정보 수집 및 수신 동의는 윙>판매자정보>계정정보에서 변경(동의/철회) 할 수 있습니다.</li>
+        </ul>
+        <div class="regform_text_8" onclick="join();">약관 동의하고 가입하기</div>
+        <div class="regform_text_9">이미 계정이 있나요? <a href="/vendor/login">로그인</a></div>
+    </div>
+</body>
+</html>

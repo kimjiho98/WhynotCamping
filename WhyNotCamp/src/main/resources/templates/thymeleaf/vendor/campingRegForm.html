@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>캠핑지 등록 1단계</title>
+<style type="text/css">
+	main {width: 900px; height:700px; margin:0 auto;}
+</style>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2b61f9a26f0c00a855734ad47d35fdb8&libraries=services"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+var checkUnload = true;
+$(function(){
+	window.onbeforeunload = function(){
+    	if(checkUnload) return "이 페이지를 벗어나면 작성된 내용은 저장되지 않습니다.";
+	}
+});
+</script>
+<script type="text/javascript" src="/vendor/js/campingRegForm.js"></script>
+</head>
+<body>
+<th:block th:include="@{/thymeleaf/vendor/Header.html}"></th:block>
+<main>
+	<!-- 캠핑장 등록 폼 -->
+	<form id="regForm" action="/vendor/reg" method="post" enctype="multipart/form-data" >
+		<div id="campname">
+		  	<input type="hidden" name="vnum" th:value="${session.vnum}">
+		  	캠핑장 이름:<input type="text" id="cname" name="cname" required="required" value="이젠 캠핑장">
+		  	<button type="button" onclick="cname_check();">상호명 중복 체크</button>
+	  	</div>
+		<div>
+			캠핑장 주소:<input type="text" size="40" name="address" id="address" class="essential">
+			<input type="hidden" id="lat" name="lat">
+			<input type="hidden" id="lng" name="lng">
+			<input type="button" onclick="find_address();" value="주소찾기">
+		</div>
+	
+	  	캠핑장 전화번호:<input type="text" name="phone" required="required" value="01099997777"><br>
+	  	캠핑장 소개<input type="text" name="info" required="required" value="이젠장 캠핑">
+	  	<div>
+	  	입실 시간
+	  	<input name="in_time" type="number" min="1" max="24" value="1">
+	  	퇴실 시간
+	  	<input name="out_time" type="number" min="1" max="24" value="1">
+	  	</div>
+	  	<input type="button" onclick="add_siteForm()" value="사이트 추가">
+		<input type="button" onclick="remove_siteForm()" value="사이트 제거"><br>
+		<div id="site"></div>
+	   <button id="save" type="button" onclick="unbind(); register();">다음 단계로</button>
+	</form>
+</main>
+<th:block th:include="@{/thymeleaf/vendor/Footer.html}"></th:block>
+</body>
+</html>

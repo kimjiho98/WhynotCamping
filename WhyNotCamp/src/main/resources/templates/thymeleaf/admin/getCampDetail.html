@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>캠핑장정보</title>
+<style>@font-face {
+    font-family: 'BMDOHYEON';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMDOHYEON.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+* {  font-family: 'BMDOHYEON';}
+
+.rwd-table {
+  margin: auto;
+  min-width: 300px;
+  max-width: 100%;
+  border-collapse: collapse;
+}
+
+.rwd-table tr:first-child {
+  border-top: none;
+  background: #428bca;
+  color: #fff;
+}
+
+.rwd-table tr {
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  background-color: #f5f9fc;
+}
+
+.rwd-table tr:nth-child(odd):not(:first-child) {
+  background-color: #ebf3f9;
+}
+
+.rwd-table th {
+  display: none;
+}
+
+.rwd-table td {
+  display: block;
+}
+
+.rwd-table td:first-child {
+  margin-top: .5em;
+}
+
+.rwd-table td:last-child {
+  margin-bottom: .5em;
+}
+
+.rwd-table td:before {
+  content: attr(data-th) ": ";
+  font-weight: bold;
+  width: 120px;
+  display: inline-block;
+  color: #000;
+}
+
+.rwd-table th,
+.rwd-table td {
+  text-align: left;
+}
+
+.rwd-table {
+  color: #333;
+  border-radius: .4em;
+  overflow: hidden;
+}
+
+.rwd-table tr {
+  border-color: #bfbfbf;
+}
+
+.rwd-table th,
+.rwd-table td {
+  padding: .5em 1em;
+}
+@media screen and (max-width: 601px) {
+  .rwd-table tr:nth-child(2) {
+    border-top: none;
+  }
+}
+@media screen and (min-width: 600px) {
+  .rwd-table tr:hover:not(:first-child) {
+    background-color: #d8e7f3;
+  }
+  .rwd-table td:before {
+    display: none;
+  }
+  .rwd-table th,
+  .rwd-table td {
+    display: table-cell;
+    padding: .25em .5em;
+  }
+  .rwd-table th:first-child,
+  .rwd-table td:first-child {
+    padding-left: 0;
+  }
+  .rwd-table th:last-child,
+  .rwd-table td:last-child {
+    padding-right: 0;
+  }
+  .rwd-table th,
+  .rwd-table td {
+    padding: 1em !important;
+  }
+}
+
+
+/* THE END OF THE IMPORTANT STUFF */
+
+/* Basic Styling */
+body {
+background: #4B79A1;
+background: -webkit-linear-gradient(to left, #4B79A1 , #283E51);
+background: linear-gradient(to left, #4B79A1 , #283E51);        
+}
+h1 {
+  text-align: center;
+  font-size: 2.4em;
+  color: #f2f2f2;
+}
+.container {
+  display: block;
+  text-align: center;
+}
+
+@-webkit-keyframes leftRight {
+  0%    { -webkit-transform: translateX(0)}
+  25%   { -webkit-transform: translateX(-10px)}
+  75%   { -webkit-transform: translateX(10px)}
+  100%  { -webkit-transform: translateX(0)}
+}
+@keyframes leftRight {
+  0%    { transform: translateX(0)}
+  25%   { transform: translateX(-10px)}
+  75%   { transform: translateX(10px)}
+  100%  { transform: translateX(0)}
+}
+
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>캠핑지 정보</h1>
+          <table class="rwd-table" th:if="${camp}!=null">
+            <tbody>
+              <tr>
+                <th> 캠핑지 이름</th>
+                <th> 주소 </th>
+                <th> 전화번호 </th>
+                <th> INFORMATION </th>
+                <th> CHECKIN</th>
+                <th> CHECKOUT </th>
+              </tr>
+           
+              <tr th:each="c : ${camp}">
+                <td data-th="Supplier Code">
+                 [[${c.cname}]]
+                </td>
+                <td data-th="Supplier Name">
+                [[${c.address}]]
+                </td>
+                <td data-th="Invoice Number">
+                    [[${c.phone}]]
+                </td>
+                <td data-th="Invoice Date">
+                    [[${c.info}]]
+                </td>
+                <td data-th="Due Date">
+                    [[${c.in_time}]]시 00분
+                </td>
+                <td data-th="Net Amount">
+                  [[${c.out_time}]]시 00분
+                </td>
+              </tr>     
+
+            </tbody>
+          </table>
+          
+          <div th:unless="${camp}!=null">
+             찾으시는 캠핑장 정보가 존재하지 않습니다.
+           </div>
+          
+        </div>
+
+
+</body>
+</html>

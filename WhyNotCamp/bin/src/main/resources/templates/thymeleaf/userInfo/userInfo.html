@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href='/css/linknavi.css'>
+<meta charset="utf-8">
+<title>MYINFO</title>
+<style>
+
+@font-face {
+    font-family: 'GangwonEdu_OTFBoldA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+body{
+    margin : 0 ;
+}
+
+.left_side{
+	width:20% ; float:left; height:100vh; overflow:hidden;	
+}
+.container{	
+	height:100vh;	
+	width:100%;
+	display:inline-flex;	
+	font-family: 'GangwonEdu_OTFBoldA';
+    font-size: 26px;    
+}
+.content{	
+	border-left: 5px double gray;
+	padding-left:150px;
+	width:1100px;	
+	text-align: center;
+	white-space: nowrap;
+}
+
+.content>.info{	
+	width:500px;
+	line-height:  80px;	
+	text-align: center;
+	margin-left:50px;
+	overflow:hidden;
+}
+
+h1{
+	font-weight:bold;
+	color:rgb(55, 78, 116);
+	width:670px;
+	margin:0;
+	margin-top:30px;
+	
+	
+}
+
+.info>li>div>.cont{
+	 border-bottom: 2px dashed  rgb(155, 160, 168) ;	
+	 display:inline-block;
+	 width:50%
+}
+.header{width:100%;height:150px;}
+ul,li{list-style:none;}
+
+.info>li>div>.title{
+ border-bottom: 5px double rgb(55, 78, 116) ;
+ width: 30%;
+ display:inline-block;
+float:center;
+}
+
+.info>li{
+	width:100%;
+}
+#editbtn_box { margin-top:60px; width:100px; margin-left:280px;}
+</style>
+</head>
+<body>
+ <th:block th:include="@{/thymeleaf/user/Header.html}"></th:block>
+<div class='container'>
+  <div class='navi' th:include="@{/fragments/naviMyinfo.html}"></div>
+
+  <div class='content'>
+	<h1> My Information </h1>
+		<ul class='info'>
+			<li class='flid'><div><span class='title'>I D </span> 　　<span class='cont' th:text="${user.uuid}"></span></div></li>
+			<li class='flname'><div><span class='title'>NAME</span> 　　<span class='cont' th:text="${user.name}"></span></div></li>
+			<li class='flnick'><div><span class='title'>NICKNAME</span> 　　<span class='cont' th:text="${user.nickname}"></span></div></li>
+			<li class='flemail'><div><span class='title'>EMAIL</span> 　　<span class='cont' th:text="${user.email}"></span></div></li>
+			<li class='flphone'><div><span class='title'>PHONE</span> 　　<span class='cont' th:text="${user.phone}"></span></div></li>
+			<li class='fladdr'><div><span class='title'>ADDRESS</span> 　　<span class='cont' th:text="${user.address}"></span></div></li>
+		</ul>
+		
+		<div id="editbtn_box">
+			<a th:href="@{'/'+'userinfo/myinfoedit'}"><button>내 정보 수정</button></a>
+		</div>
+	</div>
+</div>
+ <th:block th:include="@{/thymeleaf/user/Footer.html}"></th:block>
+</body>
+</html>

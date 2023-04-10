@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>캠핑어때</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        	<link rel="stylesheet" href="/css/bookingSummary.css">
+		<script src="/js/summaryScript.js"></script>
+		<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+function bookConfirm()
+{
+	var Data = $('.book-form').serialize();
+	
+	$.ajax({
+			url : '/book/confirm',	
+			method : 'post',
+			data : Data,  											
+			cache : false,		
+			dataType:'json',                      
+			success : function(res)                
+			{		
+				if(res.confirm)
+				{						
+					alert(res.msg);
+					location.href="/userinfo/mybooking";
+				}
+				else
+				{
+					alert(res.msg);
+				}
+			},
+			error : function(xhr,status,err)
+			{
+				alert(err);	
+			}
+			});		
+}
+</script>
+</head>
+<body>
+<th:block th:include="@{/thymeleaf/user/Header.html}"></th:block>
+      
+		 <!-- body content  -->
+
+	<div class = "book">
+	  
+       <div class = "head-bottom flex" >
+                <h2>
+                   [[${user.name}]]님이 선택한 예약사항
+                </h2>
+			</div>
+		<form class ="book-form" method="post" onsubmit="return formConfirm(this);">
+			<input type='hidden' name='bnum' th:value="${book.bnum}">
+			<input type='hidden' name='cnum' th:value="${camp.cnum}">
+			<div class="form-item">
+				<label>업체명</label>
+				<span>[[${camp.cname}]]</span>
+				
+			</div>
+			<div class="form-item">
+				<label for = "checkin-date">업체주소</label>[[${camp.address}]]
+			</div>
+			<div class = "form-item">
+				<label for = "checkin-date">체크인 </label>
+				[[${book.checkin}]]
+			</div>
+			<div class = "form-item">
+				<label for = "checkout-date">체크아웃 </label>
+				[[${book.checkout}]]
+			</div>
+			<div class = "form-item">
+				<label for = "adult">총 인원 </label>
+				[[${book.ppl}]]
+			</div>
+			<div class = "form-item">
+				<label for = "site">선택한 사이트 </label>
+				[[${book.sname}]]
+			</div>
+			<div class="form-item">
+				<label for = "checkin-date">숙박비</label>
+				₩ [[${book.ttlprice}]]
+			</div>
+			<br>
+			<hr>
+			<br>
+			<p></p>
+			<div class="form-item">
+				<label for = "checkin-date">예약자정보</label>
+				<input type='hidden' name='unum' th:value="${user.unum}">
+			</div>
+			<div class = "form-item">
+				<label for = "checkin-date">예약자 성함 </label>
+				<input type = "text" name="name"  th:value="${user.name}">
+			</div>
+			<div class="form-item">
+				<label for = "checkin-date">예약자 이메일</label>
+				<input type="text" name="email" th:value='${user.email}'>
+			</div>
+			<div class = "form-item">
+				<label for = "checkout-date">연락처 </label>
+				<input type = "text" name="phone" th:value="${user.phone}">
+			</div>
+			<div class = "form-item">
+				<div class="cbox">
+				<input type="checkbox" name="confirm" value="0" class="cbox">예약동의
+				</div>
+			</div>
+			<button class="s_btn" type="submit">예약하기</button>
+			<a th:href="'/book/facility?cnum='+${camp.cnum}" onclick="window.open
+				(this.href,'_blank','width=600px height=400px left=300px top=200px');return false;">
+				예약조건을 확인해주세요</a>
+		</form>
+	</div>
+ 
+ 	
+     <!-- footer -->
+<th:block th:include="@{/thymeleaf/user/Footer.html}"></th:block>
+
+     <!-- end of footer -->
+ 
+ 
+</body>
+</html>

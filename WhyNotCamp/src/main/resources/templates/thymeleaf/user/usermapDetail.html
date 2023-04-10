@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>캠핑장 상세정보</title>
+<link rel="stylesheet" href="/detailcss/userdetail.css">
+</head>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script>
+$('review').click(function(){
+   $('html').animate({scroll:$('.register_2')},1000);   
+})
+
+//평균 별점 노출
+ const drawStar = (target) => {
+    document.querySelector(`.star span`).style.width = `${target.value * 10}%`;
+  }
+//더보기 클릭
+$(window).on('load', function () {
+   load('#js-load', '3');
+
+   $("#js-btn-wrap").on("click", function () {
+      load('#js-load', '3', '#js-btn-wrap');
+   })
+});
+function load(id, cnt, btn) {
+   var girls_list = id + " .js-load:not(.active)";
+   var girls_length = $(girls_list).length;
+   var girls_total_cnt;
+   if (cnt < girls_length) {
+      girls_total_cnt = cnt;
+   } else {
+      girls_total_cnt = girls_length;
+      $(btn).hide();
+   }
+   $(girls_list + ":lt(" + girls_total_cnt + ")").addClass("active");
+}
+// 이미지 리스트
+
+var slideIndex = 1;
+window.onload =function(){
+showSlides(slideIndex);
+}
+// Next/previous controls
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+
+// Thumbnail image controls
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+  let i;
+  let slides = document.getElementsByClassName("mySlides");
+  let dots = document.getElementsByClassName("dot");
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+    dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " active";
+  
+}
+
+function clip(){
+
+    var url = '';    // <a>태그에서 호출한 함수인 clip 생성
+    var textarea = document.createElement("textarea");  
+    //url 변수 생성 후, textarea라는 변수에 textarea의 요소를 생성
+    
+    document.body.appendChild(textarea); //</body> 바로 위에 textarea를 추가(임시 공간이라 위치는 상관 없음)
+    url = window.document.location.href;  //url에는 현재 주소값을 넣어줌
+    textarea.value = url;  // textarea 값에 url를 넣어줌
+    textarea.select();  //textarea를 설정
+    document.execCommand("copy");   // 복사
+    document.body.removeChild(textarea); //extarea 요소를 없애줌
+    
+    alert("URL이 복사되었습니다.")  // 알림창
+}
+
+
+
+</script>
+
+
+<body>
+
+<th:block th:include="@{/thymeleaf/user/Header.html}"></th:block>
+
+   <main>
+
+   <div>
+      <div>
+         <div class="banner" style="border: 1px solid #BDBDBD">
+         
+            <h2 class="tit_location" style=" text-decoration-line: underline; text-decoration-style: double; 
+                          text-decoration-color: #D5D5D5;  text-underline-position : under; font-size:34px;">[[${m.cname}]]</h2>
+
+            <div>
+               <span class="link" data-target="review">별점 [[${score}]] </span>
+             
+            </div>   
+            
+            <div class="banner-subject">
+               <ul class="list_place">
+               <li><span class="link" data-target="qna">
+                   <a th:href="'/userinfo/addquestion/'+${m.cnum}"></span> QnA</a></li>  
+               <li>
+               <a href="'/search/camp?keyword'+${m.cname}" class="link_place"><span class="storemap"></span>지도</a></li>
+               <li>
+               <!--  <a href="share();" class="link_place"><span class="share"></span>공유하기</a></li> -->
+               <a href="#" id="sns_urlCoby" class="btn_share_sns" title="새창" onclick="clip(); return false;">공유하기</a>
+       
+               </ul>
+            </div>
+         </div>
+         <div class="subjectdetail" style="border: 1px solid #BDBDBD; margin-top:5px; padding: 0 10px;" >
+            <h3 class="tit_subject" style=" text-decoration-line: underline; text-decoration-style: solid; 
+                          text-decoration-color: #D5D5D5;  text-underline-position : under;" >상세보기</h3>
+         
+            <h4 class="tit_detail">
+            <span class="address" >위치</span></h4>
+            <span class="txt_address" >[[${m.address}]]</span>
+         
+            <h4 class="tit_detail">
+              <span class="operation">운영시간 안내</span></h4>
+            <ul class="list_operation">
+               <li style="list-style:none">
+                  <span class="txt_operation">
+                  "매일"
+                  <span class="time_operation" >[[${m.in_time}]]시 ~ [[${m.out_time}]]시</span>
+                  <span class="txt_operation" >(통화가능시간)</span>
+                  </span>
+               </li>
+            </ul>
+         
+            <h4 class="tit_detail" >
+            <span class="contact">연락처</span></h4>
+            <span class="txt_contact" >[[${m.phone}]]</span>
+           </div>
+            <div style="border: 1px solid #BDBDBD; margin-top:5px;">
+            <h4 class="tit_facility">
+            <span class="installation" style="padding-right: 10px;"></span>시설정보</h4>
+            
+            <ul class="list_facility">
+            <!-- facility 값이 있을경우   -->
+               <li th:if="${f.wifi == 1}">
+                 <div><img src="/img/wifi.jpeg"></div>
+                <span class="color_g">WIFI</span></li>
+                
+                <li th:if="${f.pet == 1}">
+                <div> <img src="/img/animal.jpeg"></div>
+                <span class="color_g">동물출입</span></li>
+                
+                <li th:if="${f.cook == 1}">
+                <div><img src="/img/cook.jpeg"></div>
+                <span  class="color_g">취사</span></li>
+                
+                <li th:if="${f.bbq == 1}">
+               <div><img src="/img/bbq.jpeg"></div>
+                <span class="color_g">바베큐</span></li>
+                
+                <li  th:if="${f.fire == 1}">
+                <div ><img src="/img/fire.jpeg"></div>
+                <span class="color_g">캠프파이어</span></li>
+                
+                <li th:if="${f.toilet == 1}">
+               <div><img src="/img/toilet.jpeg"></div>
+                <span class="color_g">화장실</span></li>
+                
+                <!-- facility 값이 없을경우   -->
+                <li th:if="${f.wifi == 0}">
+                <div><img src="/img/no-wifi.jpeg"></div>
+                <span class="color_g">WIFI불가</span></li>
+                
+                <li th:if="${f.pet == 0}" >
+                <div><img src="/img/no-animal.jpeg"></div>
+                <span class="color_g">동물출입불가</span>
+                </li>
+               
+                <li th:if="${f.cook == 0}">
+               <div><img src="/img/no-cook.jpeg"></div>
+                <span class="color_g">취사불가</span></li>
+                
+                <li th:if="${f.bbq == 0}">
+                <div><img src="/img/no-bbq.jpeg"></div>
+                <span class="color_g">바베큐불가</span></li>
+                
+                <li th:if="${f.fire == 0}">
+                <div><img src="/img/no-fire.jpeg"></div>
+                <span class="color_g">캠프파이어불가</span></li>
+                
+                <li  th:if="${f.toilet == 0}">
+                <div><img src="/img/no-toilet.jpeg"></div>
+                <span class="color_g">화장실없음</span></li>
+            
+            </ul>
+            </div>
+         
+            <div class="reserv-btn">
+               <a th:href="'/book/bookform?cnum='+${m.cnum}" class="btn btn-dark">예약하기</a> 
+            </div> 
+         </div>
+      
+      
+       <div class="slideshow-container">
+           <div class="mySlides fade" th:each="att, iStat:${m.attList}" >
+              <div class="numbertext">[[${iStat.index+1}]] / [[${iStat.size}]]</div>
+          
+               <div class="slide-img" >
+                 <img style="aspect-ratio: 16/ 9" th:src="'/camping/'+${m.cname}+'/'+${att.fname}">
+                </div> 
+                
+           </div>
+       </div>
+       
+        <div style="text-align:center">
+           <span th:each="att, iStat:${m.attList}">
+             <span class="dot" th:onclick="'currentSlide('+${iStat.index+1}+')'"></span>
+             </span>
+        </div>
+      
+      <div id="js-load" class="revmain">
+         <ul class="menu" th:each="rev: ${m.revList}">
+            <li class="lists__item js-load" style="border: 1px solid #BDBDBD;"> <div style=" text-decoration-line: underline; text-decoration-style: solid; 
+                          text-decoration-color: #D5D5D5;  text-underline-position : under;">작성자 : [[${rev.nickname}]]  
+             ★ [[${rev.score}]]</div><br> 
+             <div style="font-family: 'GangwonEdu_OTFBoldA'; font-size:20px;"> [[${rev.content}]] </div> </li>
+         </ul>
+      </div> 
+      
+      <div class="more-btn">
+         <button type="button" id="js-btn-wrap" class="btn btn-white" >더보기</button>
+      </div>
+      </div>
+   </main>
+   <th:block th:include="@{/thymeleaf/user/Footer.html}"></th:block>
+
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script type="text/javascript">      
+
+
+    $(function(){  
+    	$('#alnav').hide();
+		$('.alarmOff').css('display','');
+		$('.alarmOn').css('display','none');
+           
+        var nickname= '[[${session.nickname}]]';
+       
+           if(nickname!="")
+           {
+            $('.info_login').text("[[${session.nickname}]] 님")   
+            $('.info_login').css("font-weight","600")
+            $('.info_login').css("overflow","hidden");
+            $('.info_register').text("로그아웃")
+            $('.info_register').css("cursor","pointer")
+            $('.info_register').click(function(){
+               location.href="/user/logout";
+            })      
+           }
+       
+    });           
+    
+    (function poll(){  
+       var nickname= '[[${session.nickname}]]';
+          
+       if(nickname!="")	
+       {
+	       $.ajax({
+	          url: "/userinfo/alCheck",
+	          method : 'post',
+	          success: function(res){
+	             if(res.bell)
+	            {               
+	               alarmOn();            
+	            }
+	             else if(res.stop)
+	            {
+	                alarmOff();
+	             }
+	          },
+	          dataType: "json",
+	          complete: poll,
+	          timeout: 100000
+	          });    
+       }   
+       
+    })();      
+    
+    
+   function alarmOn(){
+      $('.alarmOff').css('display','none');
+      $('.alarmOn').css('display','');
+   }   
+   
+   function alarmOff(){
+      $('.alarmOff').css('display','');
+      $('.alarmOn').css('display','none');
+   }   
+   
+   const vibration = (target) => {
+        target.classList.add("vibration");
+
+        setTimeout(function() {
+          target.classList.remove("vibration");
+        }, 6000);
+      }
+   
+   function openAlarm(){
+      
+      $.ajax({
+         url : '/userinfo/getalist',   
+         method : 'post',                                       
+         cache : false,      
+         dataType:'json',       
+         success : function(res) {   
+            $.each(res.list, function(index, item) {
+               $("#almsgs").append("<a class='alink' style='font-size:14px; color: #214242;' href='" + item.url + "'>" + item.msg +"</a>");
+               $("#almsgs").append("<a class='alink' style='font-size:20px; color:red; font-weight:bold;' href='javascript:delAlarm("+item.alarm.unum+","+item.alarm.alnum+");'> ⓧ</a>"+"<br>");
+             
+            });
+         },
+         error : function() {
+            alert('error');         
+         }
+      });
+      
+      $('#alnav').css('display','');
+      $('.alarmOff').css('display','');
+      $('.alarmOn').css('display','none');
+      $("#almsgs").empty(); 
+   }
+   
+   function delAlarm(unum,alnum)
+   {
+      var unum = unum;
+      var alnum = alnum;
+      
+      $.ajax({
+         url : '/userinfo/removeAlarm',   
+         method : 'post',         
+         data: {"unum":unum,"alnum":alnum},
+         cache : false,      
+         dataType:'json',       
+         success : function(res) 
+         {
+            $('.alink').remove();
+         },
+         error : function() {
+            alert('error');         
+         }});
+   }
+   
+   function closenav(){
+       $('#alnav').css('display','none');       
+   }
+   
+   function mainsearchCheck(f)
+   {
+      if (f.keyword.value == '')
+      {
+         botbox.text( search_error[Math.floor(Math.random() * search_error.length )]);
+         f.keyword.value='';
+         return false;
+      }
+   }   
+    
+</script>
+<style>
+@font-face {
+   font-family: 'SangSangFlowerRoad';
+   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_three@1.0/SangSangFlowerRoad.woff') format('woff');
+   font-weight: normal;
+   font-style: normal;
+}    
+   
+@keyframes slide {
+   0% {transform: translateY(0px);}
+   10% {transform: translateY(-70px);}
+   20% {transform: translateY(-120px);}
+   30% {transform: translateY(-180px);}
+   40% {transform: translateY(-230px);}
+   50% {transform: translateY(-280px);}
+   60% {transform: translateY(-330px);}
+   70% {transform: translateY(-380px);}
+   80% {transform: translateY(-430px);}
+   100% {transform: translateY(-480px);}
+   
+   
+ }
+body{display: block; margin: 0;}
+header{width:100%;height: auto; }
+header .main_header{ height: 150px; display: flex; background-color: #F7EAD0; color: black; position: static;  width:100%; border-bottom: 5px double gray;}
+header .main_header .main_logo{display: inline-block; position: relative; top: 20px; font-family:SaenggeoJincheon ; font-size: 40px;  height: fit-content; }  
+header .main_header .main_logo a {  font-family: 'SangSangFlowerRoad'; font-size:60px; display: flex; align-items: center; text-decoration: none; color: black; width: 300px;height: 100px;}
+header .main_header .main_logo img{width: 100px; height: 100px; margin-left: 40px;}
+@media screen and (max-width:1600px){header .main_header .main_logo{display: inline-block; position: relative; top: 20px; font-family:SaenggeoJincheon ; font-size: 35px;  height: fit-content; }}
+@media screen and (max-width:1600px){header .main_header .main_logo img{width: 80px; height: 80px; margin-left: 40px;}}
+
+header .main_header .search_0{display:inline-block; }
+header .main_header div.search {display: flex; align-items: center;  position: relative; left:50px; }
+@media screen and (max-width:1600px){header .main_header div.search {display: flex; align-items: center;  position: relative; left:30px; }}
+header .main_header div.search input{width: 300px; height: 30px; border: 2px solid black; border-radius: 100px; padding-left: 20px; }
+@media screen and (max-width:1600px){header .main_header div.search input{width: 240px; height: 30px; border: 2px solid black; border-radius: 100px; padding-left: 20px; }}
+header .main_header div.search{ width: 500px; height: 50px; overflow: hidden; margin-top: 50px;}
+@media screen and (max-width:1600px){header .main_header div.search{ width: 500px; height: 50px; overflow: hidden; margin-top: 50px; font-size: 14px;}}
+header .main_header div.search ul.area{position: relative; left: 10px; list-style: none;  }
+header .main_header div.search ul.area li:first-child{margin-top: 500px;}
+header .main_header div.search ul.area li {margin-top: 30px; animation: slide 30s infinite;}
+header .main_header div.search ul.area li::before{content: 'HOT'; color: red; border: 1px solid rgb(255, 0, 0); font-size: 12px; padding: 3px; margin-right: 7px;}
+@media screen and (max-width:1600px){header .main_header div.search ul.area li::before{content: 'HOT'; color: red; border: 1px solid rgb(255, 0, 0); font-size: 10px; padding: 3px; margin-right: 7px;}}
+
+header .main_header div.information { position: relative; left: 700px; width: 300px; height: 150px; }
+@media screen and (max-width:1600px){ header .main_header div.information{position: relative; left:300px;}}
+header .main_header div.information ul.info_top{display:flex; padding: 0px; }
+header .main_header div.information ul.info_top li{ list-style: none; margin-left: 10px;border-left: 1px solid black; position:relative; left:30px; padding-left:10px; color: black;  }
+header .main_header div.information ul.info_top li:first-child {border: 0px; }
+header .main_header div.information ul.info_top li a{text-decoration: none; color: black;}
+
+header .main_header div.information ul.info_btm {width:250px; height: auto;}
+header .main_header div.information ul.info_btm li{ margin-left: 15px; list-style: none; display: inline-block; }
+header .main_header div.information ul.info_btm li a {display: flex; flex-direction: column; align-self: center; text-decoration: none; align-items: center; color: black; cursor: pointer;  }
+header .main_header div.information ul.info_btm img{width: 40px;height: 40px;}
+
+/*------------------------------------------nav_bar--------------------------------------------------------------------------------------------------------------------*/
+/*네비 눌렷을때 box-shadow: rgba(0, 0, 0, 0.35) 0px -50px 36px -28px inset;*/
+.nav {position: absolute; top: 0; left: 1100px;  width: 300px; height: 50px; font-size: 15px; display: flex;} 
+@media screen and (max-width:1600px){.nav{font-size: 13px; left: 900px; width:200px;}}    
+.nav .menu1{width: 150px; height: 30px;  display: flex; align-items: center; justify-content: center; border: 2px solid gainsboro; border-top: 0;box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px; cursor: pointer;}
+.nav .menu2{width: 150px; height: 30px;  display: flex; align-items: center; justify-content: center; border: 2px solid gainsboro; border-top: 0;box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px; cursor: pointer;}
+@media screen and (max-width:1600px){.nav .menu1{width: 100px;}}
+@media screen and (max-width:1600px){.nav .menu2{width: 100px;}}
+.nav .menu1 img{padding-right: 10px;}
+.nav .menu2 img{padding-right: 10px;}
+.nav .menu1:hover{ background-color:gainsboro;}
+.nav .menu2:hover{ background-color:gainsboro;}
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+    
+
+.box{
+  animation: vibration .1s infinite;
+}
+
+@keyframes vibration {
+  from {
+    transform: rotate(3deg);
+  }
+  to {
+    transform: rotate(-3deg);
+  }
+}
+
+#alnav{ position: absolute ; 
+      top:130px;
+      right:130px; 
+      border:1px solid gray;
+      box-shadow: 3px 3px 3px 3px white;
+      background-color:#DBD7B8;
+      min-height: 140px;
+      height: auto;
+      width: 290px;
+      overflow:auto;
+      border-radius: 0.5em;
+      text-align:center;
+      line-height: 30px;
+}
+       
+#alnav>#alulnavId>div{
+   height: 100px;
+   align:center;
+   text-align:center;   
+   margin-top:10px;
+}       
+
+.alink{
+     text-decoration: none;
+     text-align:center;
+     margin-top:10px;
+}    
+    
+    
+    </style>
+</head>
+<body>
+    <header>
+        <div class="main_header">
+          <div class="main_logo"><a href="/user/main"><img src="/img/logo2.png" style='margin-right:10px;'>캠핑어때</a></div>
+            <div class="search_0">
+               <div class="search">
+                  <form action="/search/camp" method="get" id="_layout_search_border_" onsubmit="return mainsearchCheck(this);">
+                     <input type='text' name="keyword" placeholder="　검색어를 입력해주세요">
+                  </form>
+                  <ul class="area">
+                  <li>충북 제천</li>
+                     <li>충북 단양</li>
+                     <li>강원 원주</li>
+                     <li>경기 가평</li>
+                     <li>강원 홍천</li>
+                     <li>강원 춘천</li>
+                     <li>경기 포천</li>
+                     <li>경기 양평</li>
+                  </ul>
+               </div>
+            </div>
+                <div class="information">
+                     <ul class="info_top">
+                        <li class="info_login"><a href="/user/loginpage">로그인</a>
+                        <li class="info_register"><a href="/user/register"> 회원가입</a></li>
+                        <li><a href="/user/info">고객센터</a></li>
+                     </ul>
+                     <ul class="info_btm">                     
+                     <li><a href="/userinfo/myinfo"><img src="/img/Header/header_personal.png">개인메뉴</a></li>
+                     <li><a href="/userinfo/mybooking"><img src="/img/Header/header-reservation.png">예약확인</a></li>
+                     <li>                    
+                        <a class='alarmOn'>
+                            <img class='box' src="/img/Header/header-alarm-on.png" onclick="openAlarm()">알림                        
+                      </a>                                           
+                       <a class='alarmOff' >
+                          <img src="/img/Header/header-alarm.png" >알림
+                       </a>                       
+                    </li>
+                    
+                    </ul>
+                     
+                </div>
+        </div>
+        
+        <div id="alnav" style="display:none;" onclick="closenav();" >
+            <div class="alulnav" id="alulnavId">
+                  <div id="almsgs"></div>
+                  <div id="removeAlarm"></div>                                  
+               </div>
+         </div>
+        
+        <div class="nav">                        
+            
+            <div class="menu2"><a href="/market/home"><img src="/img/Header/carrot.png">당근마켓</a></div>
+        
+        </div>
+        </header>
+</body>
+</html>

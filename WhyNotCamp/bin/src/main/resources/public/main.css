@@ -1,0 +1,114 @@
+@font-face {
+    font-family: 'MICEGothic Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-01@1.0/MICEGothic Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'GangwonEdu_OTFBoldA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@keyframes slide-top{0%{transform:translateY(-100%)}100%{transform:translateY(0)}}
+
+body{margin: 0; background-color: black;  color: white; z-index: 0;  }
+ul{list-style: none;}
+header{font-family:MICEGothic Bold;  color: white; text-decoration: none; position:absolute; left: 130px;width: 86.5%; height: 150px;  }
+@media screen and (max-width:1600px){header{font-family:MICEGothic Bold;  color: white; text-decoration: none; position:absolute; left: 130px;width: 81%;}}
+
+header .nav{display: flex; justify-content: space-between; }
+header .nav ul.personal li{float: left; padding-right: 10px;margin-right: 10px; border-right: 1px solid white;}
+header .nav ul.personal li:last-child{border-right: 0px;}   
+header .nav ul.personal li a.logined{text-decoration: none;  color: white;}
+header .nav ul.personal li a.reg{text-decoration: none;  color: white;}
+
+header .nav ul.personal_2{display: none;}
+header .nav ul.personal_2 .pe1 {display: flex; flex-direction: end;}
+header .nav ul.personal_2 li:first-child{margin-right: 50px;}
+header .nav ul.personal_2 span li:first-child{padding-right: 30px;}
+header .nav ul.personal_2 span li{float: left; margin-top: 30px;  border-right: 3px solid white;padding-right: 20px;}
+header .nav ul.personal_2 span li:nth-child(2){padding-right: 20px;}
+header .nav ul.personal_2 span li:nth-child(3){margin-left: 40px; border: 0px;}
+header .nav ul.personal_2 li a {color: white; margin-left:  text-decoration: none;}
+header .nav ul.personal_2 .personal_3{cursor: pointer;}
+header .container ul{display: flex; justify-content: center;}
+header .container .nav_hover li{float: left; }
+header .container .nav_hover li a {text-decoration: none; color: white; margin:15px; position: relative; left: 80%; font-size: 20px;}
+header .container .nav_hover li a::before{content: ''; background-color: aliceblue; width:0%; height: 2px; position: absolute;left:50%; bottom: -5px; transition: 0.3s; transform: translateX(-50%);}
+header .container .nav_hover li a:hover:before{width: 100%;}
+.bg-video {
+    position: absolute;
+    min-width:  100%;
+    min-height: 100%;
+    right: 0; bottom: 0;top: 0; left: 0;
+    display: flex;
+    justify-content: center;   
+    z-index: -1;
+}
+main{width:86.5%;height:550px;left: 130px;top:150px ; position: absolute; z-index: 0; display: flex;}
+@media screen and (max-width:1366px){main{position:absolute; left: 130px; width: 81%;}}
+main div.iner_left{font-family: GangwonEdu_OTFBoldA; font-size: 2rem; margin: 7% 15% 30px; }
+main div.iner_left p.ment{animation:slide-top 1s cubic-bezier(0,0,0,0) both}
+main div.iner_left div.row input{width:230px; height: 32px; font-size: 1rem;border: 0; border-radius: 15px; outline: none; padding-left: 20px; background-color: rgb(233, 233, 233); animation:slide-top .9s cubic-bezier(0,0,0,0)  both }
+main div.iner_left p input{width:230px; height: 32px; font-size: 1rem;border: 0; border-radius: 15px; outline: none; padding-left: 20px; background-color: rgb(233, 233, 233);animation:slide-top .7s cubic-bezier(0,0,0,0) both}
+
+main div.iner_left button{width: 150px; height: 32px; font-size: 1rem;border: 0; border-radius: 15px; outline: none;  background-color: rgb(233, 233, 233); animation:slide-top .5s cubic-bezier(0,0,0,0) both}
+
+main div.iner_right{width: 400px; height: 500px; background-color: rgba(192, 192, 192,0.1 );}
+@media screen and (max-width:1600px){main div.iner_right{position:absolute; left:750px;width:300px; height:400px;}}
+.slider-divs{width:300px; height:400px; display: flex; align-items: center; justify-content: center; position: relative; top: 50px; left:40px;}
+@media screen and (max-width:1600px){.slider-divs{width:330px;height:300px; position:relative; left:0px;}}
+main div.iner_right  img{width:300px;height: 400px; }
+
+
+/*-----------------------------------------------------로그인 및 회원가입-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+.btn_login{cursor: pointer;}
+.login .top li{list-style: none;}
+@font-face {
+font-family: dotum;
+src: local('KoPubWorld돋움체 Regular'), url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldDotumMedium.woff2') format('woff2');}
+@font-face {
+font-family: 'KCC-eunyoung';
+src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/KCC-eunyoung-Regular.woff') format('woff');
+font-weight: normal;
+font-style: normal;
+}     
+.login_modal{position: fixed;background-color: rgba(192, 192, 192,0.7 ); top: 0; left: 0; width: 100%; height: 100vh;display: none; z-index: 1;}
+.login_content{position: fixed; width: 500px; height: 500px; border: 3px solid black;  position:relative; left:650px; top:200px; background-color: white; } 
+@media screen and (max-width:1600px){.login_content{postion:relative; left:450px; top:100px;}} 
+.login_content div.logo{position: relative; font-family: 'KCC-eunyoung'; font-size: 30px; left: 70px; margin-top: 30px;color: black;  }
+.login_content div.btn{color: black; cursor: pointer; font-size: 20px; position: absolute; left: 470px;margin-top: 10px;}
+.login_content img{width: 100px;  }
+.login_content .top {position: relative; width: 350px; margin-top: 40px; left: 40px; z-index: 1; }
+.login_content .top li {padding: 0 0 9px;}
+.login_content .top li label {display: inline-block; width:63px; font-size: 17px; color: #464646; font-family:dotum; font-weight: bold;}
+.login_content .top li input[type='text'],
+.login_content .top li input[type='password'] {width: 146px; height: 25px; border-color: #d9d9d9; border-radius: 10px;}
+.login_content .top a  {position: absolute; right: 0; top: 0;}
+.login_content .top li a {display:block; width:111px; height: 69px; background:#795548;font-size: 18px; color: #fff; line-height: 69px; text-align: center; font-weight: bold; border: 1px;  text-decoration: none; }
+.login_content .top li.save {padding: 0 0 0 69px;}
+.login_content .top li.save label {font-size: 13px; font-weight: normal; width: auto;}
+.login_content .btm {margin-top: 150px; margin-left: 110px;}
+.login_content .btm li{  color: #383d41; font-size: 12px; font-family: dotum; }
+.login_content .btm li a { font-size: 12px; font-family: dotum; font-weight: bold; color:#795548; text-decoration:underline; margin-left: 10px; }
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/*소영파트*/
+.main-search .search-form {width:500px;background:#fff;height:60px;border-radius:60px;overflow:hidden;box-shadow:0px 0px 30px rgba(0,0,0,.4);position:relative;display:inline-block;text-align:left !important}
+.main-search .search-form .search_input {width:460px;height:56px;border:none;background:transparent;font-size:1.4rem;font-family:'noto sans kr';color:#333;padding-left:40px;;line-height:56px;outline:0;letter-spacing:-0.03em}
+
+.main-search .search-form button {border:none;background:none;font-size:35px;position:absolute;top:0;right:0;outline:0;cursor:pointer;background:#f0f0f0;color:#555;height:60px;width:100px;}
+.main-search .search-form button:hover {background:#0099ff;color:#fff}
+.main-search .keyword_del {position:absolute;top:0;right:100px;width:60px;text-align:center;padding-top:17px;display:none}
+
+.main-search .search-form .search_input[type=text]::-ms-clear {display:none;}
+.main-search .search-form .search_input::placeholder {color:#bbb;opacity: 1;}
+.main-search .search-form .search_input:-ms-input-placeholder {color:#bbb;}
+.main-search .search-form .search_input::-ms-input-placeholder {color:#bbb;}
+
+.inkey {font-size:1.3rem;color:#fff;text-align:center;padding-top:15px;}
+.inkey a {display:inline-block;color:#fff;margin:0 10px;opacity:.7;text-decoration:none;}
+.inkey a:hover {opacity:1}
+
+

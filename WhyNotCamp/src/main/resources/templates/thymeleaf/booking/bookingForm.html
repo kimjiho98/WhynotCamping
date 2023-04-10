@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>캠핑어때</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/css/bookingForm.css">
+<script src="https://kit.fontawesome.com/dbed6b6114.js" crossorigin="anonymous"></script>
+<link rel = "icon" href = "images/logo.png" type = "image/png">
+<script>
+$(function(){
+	var unum = '[[${session.unum}]]';
+	if(unum=='')
+	{
+	alert('로그인이 필요합니다');
+	location.href='/user/loginpage';
+	}
+	
+});
+
+
+function checkIn(e)
+{
+	var checkin = e.target.value;
+	
+	var checkdate = new Date(checkin);
+	var today = new Date();
+	
+	if(checkdate<today){
+		alert('체크인 날짜는 오늘보다 이후로 설정해야합니다');
+		document.getElementById('checkin-date').value = '';
+	}
+}
+
+function checkOut(e)
+{
+	var out = e.target.value;
+	var outdate = new Date(out);
+	
+	var date = document.getElementById('checkin-date').value;
+	var indate = new Date(date);
+		
+	if(outdate<=indate)
+	{
+		alert("체크아웃 날짜는 체크인 날짜 이후에 가능합니다");
+		document.getElementById('checkout-date').value = '';
+	}else{
+		roomAvailable();
+	}
+	
+}
+
+function roomAvailable()
+{
+	var checkin = document.getElementById('checkin-date').value;
+	var checkout = document.getElementById('checkout-date').value;
+	var cnum = '[[${camp.cnum}]]';
+	$.ajax({
+			url : '/book/available',	
+			method : 'post',
+			data : {"checkin":checkin,"checkout":checkout,"cnum":cnum},  											
+			cache : false,		
+			dataType:'json',                      
+			success : function(res)                
+			{	
+				var bookable = res.bookable
+				for (var i = 0; i < bookable.length; i++) {
+			      var item = bookable[i];
+			      const childDiv = document.getElementById(item);
+			      const parentDiv = childDiv.parentElement;
+
+			      parentDiv.remove(); 
+			      
+				}
+			},
+			error : function(xhr,status,err)
+			{
+				alert(err);	
+			}
+			});		
+}
+</script>
+</head>
+
+<body>
+<th:block th:include="@{/thymeleaf/user/Header.html}"></th:block>
+
+<form method="post" action="/book/summary" onsubmit="return formCheck(this);">
+	<div class = "head-above-top" id = "head-above-top">
+          <div class = "head-top">
+          </div>
+          <div class = "head-bottom flex">
+              <h2>[[${camp.cname}]]</h2>
+                  <span id = "nav-btn"> 
+                 	 	<span class="star">★★★★★
+						  	<span th:if="${score!=null}" th:style="'width:'+${score*20}+'%;'">
+						  		★★★★★
+						 	</span>
+						</span>
+                  	[[${score}]]
+                    <label>후기([[${camp.revList.size}]]개)</label>
+                  </span>
+           </div>
+           
+    	<p><br>
+                 
+	  	 <!-- Slideshow container -->
+		<div class="slideshow-container">
+	
+	           <!-- Full-width images with number and caption text -->
+		
+			<div class="mySlides fade" th:each="att, iStat:${camp.attList}">
+				<div class="numbertext">[[${iStat.index+1}]] / [[${iStat.size}]]
+				</div>
+					<div class="slide-img">
+				   		<img style="aspect-ratio: 16 / 9" th:src="@{'/camping/'+${camp.cname}+'/'+${att.fname}}" >
+
+				     </div>
+		     </div>
+		     
+				<!-- Next and previous buttons -->
+	         <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+	         <a class="next" onclick="plusSlides(1)">&#10095;</a>
+	                   
+		</div>        
+		
+	            <!-- The dots/circles -->        
+		<div style="text-align:center">
+	        <span th:each="att, iStat:${camp.attList}">
+	            <span class="dot" th:onclick="'currentSlide('+${iStat.index+1}+')'"></span>
+			</span>
+	    </div>
+	</div>
+
+
+        <!-- side navbar -->
+        <div class = "sidenav" id = "sidenav">
+            <span class = "cancel-btn" id = "cancel-btn">
+                <i class = "fas fa-times"></i>
+            </span>
+			<h4>리뷰 목록</h4>
+            <ul class = "navbar" th:each="rev:${camp.revList}">
+                <li><span>[[${rev.nickname}]]</span>
+                    <span class="star">★★★★★
+						<span th:style="'width:'+${(rev.score)*20}+'%;'">★★★★★</span>
+					</span></li>
+                <li><span>[[${rev.regDate}]]</span></li>
+                <li><span>[[${rev.content}]]</span></li>
+            </ul>
+        </div>
+        <!-- end of side navbar -->
+
+        <!-- fullscreen modal -->
+        <div id = "modal"></div>
+        <!-- end of fullscreen modal -->
+		
+		
+	
+		 <!-- body content  -->
+
+        <div class = "book">
+        <input type='hidden' name='cnum' th:value='${camp.cnum}'>
+        <input type='hidden' name='bnum' th:value='${bnum}'>
+            <div class = "book-form">
+                <div class = "form-item">
+                    <label for = "checkin-date" >체크인 </label>
+                    <input id = "checkin-date" type="date" name="checkin" onchange="checkIn(event);">
+                </div>
+                <div class = "form-item">
+                    <label for = "checkout-date">체크아웃 </label>
+                    <input type="date" id = "checkout-date" name="checkout" onchange="checkOut(event);">
+                </div>
+                <div class = "form-item">
+                    <label for = "adult">인원수 </label>
+                    <input type="number" id = "adult" min="1" name="ppl" value='2'>
+                </div>
+             </div>
+        </div>
+
+<!-- 지도 올자리 -->
+		<div th:if="${sitemap!=null}" class="sitemap_container">
+			<div class = 'sitemap'>
+			<div class = "title">
+                <h3>사이트맵</h3>
+            </div>
+				<img class="sitemap_img" style="width:500px; height:300px; margin-top:50px; margin-bottom:50px; border:10px double #6A719E; border-radius:0.8em;" th:src="'/camping/'+${camp.cname}+'/'+${sitemap}"><br>					
+			</div>
+		</div>
+
+
+        <section class = "rooms sec-width" id = "rooms">
+            
+            <div class = "rooms-container">
+            <div class = "title">
+                <h3>사이트 유형</h3>
+            </div>
+                <!-- single room -->
+                <article class = "room">
+                    <div class = "room-text" th:each="site:${camp.siteList}">
+                    	<div th:id="${site.snum}">
+	                        <br><h3>[[${site.sname}]]</h3>
+	                        <ul>
+	                            <li>
+	                                <i class = "fas fa-arrow-alt-circle-right"></i>
+	                                <label>최대인원</label>
+	                                [[${site.max_ppl}]]
+	                            </li>
+	                        </ul>
+	                        <div class = "rate">
+	                            <span>₩ [[${site.price}]] /</span> 1박 기준<br>
+	                        </div>  
+                            <label class="site_select">
+						    <input type="radio" name="phone" th:value="${site.price}+';'+${site.snum}+';'+${site.sname}" >
+                            <span>선택</span>
+							</label>
+						</div>
+                    </div>
+                </article>
+             	
+              
+            </div>
+            <div class='book-btn'>
+            <button type="submit">예약하기</button>
+            </div>
+        </section>
+                <!-- end of single room -->
+  	
+</form>		            
+
+        <!-- end of body content -->
+		
+       <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+       
+        <script src="/js/formScript.js"></script>
+		
+        <!-- footer -->
+		
+<th:block th:include="@{/thymeleaf/user/Footer.html}"></th:block>
+</body>
+</html>

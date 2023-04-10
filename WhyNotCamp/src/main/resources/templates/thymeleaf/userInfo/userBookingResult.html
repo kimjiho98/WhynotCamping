@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href='/css/linknavi.css'>
+<title>BOOKING</title>
+<style>
+
+@font-face {
+    font-family: 'GangwonEdu_OTFBoldA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@media(max-width: 400px){
+body{
+    margin : 0 ;
+      width:100%;
+}
+}
+
+.container{	
+	height:100vh;	
+	width:100%;
+	display:inline-flex;
+	 font-family: 'GangwonEdu_OTFBoldA';
+    font-size: 19px;	    
+    overflow-x:auto;
+}
+.content{	
+	border-left: 5px double gray;
+	width:1100px;	
+	text-align: center;	
+	white-space: nowrap;
+}
+
+h1{
+	font-weight:bold;
+	color:rgb(55, 78, 116);
+}
+.header{width:100%;height:150px;}
+
+.cont_t{
+	width:100%;
+	padding:0px;
+	overflow:hidden;
+}
+
+ details summary::marker{font-size:0;}
+
+.cont_1{
+	width:700px;
+	margin:0 auto;
+	background-color : rgb(78, 108, 135);
+	height:1.9em;	
+	color:white;	
+	display: flex;
+	align-items: center;
+	border-top: 5px double gray; border-left: 5px double gray;border-right: 5px double gray;
+	border-bottom:0.5px solid gray; border-radius: 0.2em;
+	padding-left:20px;	
+	margin-left:185px;
+	
+}
+
+.cont_2{
+	width:700px;
+	margin:0 auto;
+	background-color : #FCE68B;
+	height:2em;
+	display: flex;
+	align-items: center;
+	border-bottom:3px dotted gray;
+	border-left: 5px double gray;
+	border-right: 5px double gray;
+	margin-left:185px;
+	padding-left:20px;
+	
+}
+
+.title{color:#CBDBE8;}
+.title1{color: rgb(78, 108, 135);}
+
+</style>
+</head>
+<body>
+ <th:block th:include="@{/thymeleaf/user/Header.html}"></th:block>
+<div class='container'>	
+	<div class='navi' th:include="@{/fragments/naviMyinfo.html}"></div>
+		
+	<div class='content'>
+	<h1>My Reservation</h1>	
+	
+	<div class='cont_t' th:each="l : ${list}">
+					
+		<details>
+		<summary>
+		<div class='cont_1'>
+			<span class='title'>캠핑장 </span>　
+			<span class='cont'><a style=' text-decoration:none; color: black;'th:href="'/search/detail/'+${l.campingarea.cnum}">[[${l.campingarea.cname}]]</a><span>　
+			<span class='title'>RegDate </span><span class='cont'>[[${l.booking.regDate}]]</span>　
+			<span th:switch="${l.booking.confirm}">
+				<span th:case="0" style='color:gold'>예약 승인 대기중</span>
+				<span th:case="1" style='color:blue'>예약 확정 </span>
+				<span th:case="1" th:unless="${l.revready}" style='color:blue'>예약 확정 </span>				
+				<span th:case="2" style='color:red'>취소 신청 대기중</span>
+				<span th:case="3" style='color:orange'>취소 확정 </span>	
+			</span>	
+			　　<a th:if="${l.revready}" th:href="'/userinfo/addreview/'+${l.booking.bnum}+'/'+${l.campingarea.cnum}"><button>리뷰쓰기</button></a>
+		</div>
+		</summary>
+		
+		<div class='cont_2' >
+			<span class='title1'>체크인　</span><span class='cont'>[[${l.booking.checkin}]]</span>　
+			<span class='title1'>체크아웃　</span><span class='cont'>[[${l.booking.checkout}]]</span>　
+			<span class='title1'>SITE번호　</span><span class='cont'>[[${l.booking.snum}]]</span>　
+		</div>
+		<div class='cont_2'>
+			<span class='title1'>가격　</span><span class='cont'>[[${l.booking.ttlprice}]] 원</span>　
+			<span class='title1'>인원　</span><span class='cont'>[[${l.booking.ppl}]] 명</span>　
+		</div>
+		<div class='cont_2'>
+			<span class='title1'>이름　</span><span class='cont'>[[${l.booking.name}]]</span>　
+			<span class='title1'>전화번호　</span><span class='cont'>[[${l.booking.phone}]]</span>			
+		</div>
+		
+		</details>				
+	</div>	
+</div>
+</div>
+
+ <th:block th:include="@{/thymeleaf/user/Footer.html}"></th:block>
+</body>
+</html>

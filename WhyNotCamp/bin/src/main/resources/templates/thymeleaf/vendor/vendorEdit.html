@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vendor 수정</title>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+</script>
+<style type="text/css">
+body{display: block; margin: 0; width: 100%; height: 100%; }
+main{border: 1px solid; width: 1000px; height: auto; font-size: 16px; position: relative; left: 400px; top: 100px; background-color: white;  height: auto; box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px; margin-bottom: 300px;}
+@media screen and (max-width:1600px){main{border: 1px solid; width: 1000px; height: auto; font-size: 15px; position: relative; left: 200px; top: 200px; background-color: white;}} 
+main h1{ position: relative; left: 100px; width: auto; margin-top: 60px; }
+main .info_vendor{ border: 1px solid gray;   width: 800px; height: auto; position: relative; left: 100px; border-top: 1px solid;}
+/*-----------------------------------계정정보데이터쪽--------------------------------------------------------------------------*/
+main .info_vendor .vendor_form .vendor_write .pwd {display: block;}
+main .info_vendor .vendor_form{ display: flex; align-items: center; border-bottom: 1px solid gray; height:80px;}
+main .info_vendor .vendor_form:last-child{border: 0px;}
+main .info_vendor .vendor_form .vendor_formation{ width: 150px; display: flex; justify-content: center; align-items: center; border-right:1px solid black ; height: 80px;  background-color:#eee;}
+main .info_vendor .vendor_form .vendor_write{ width:650px ; display: flex; justify-content: center; align-items: center; }
+/*--------------------------------------버튼들--------------------------------------------------------------------------------------------*/
+.complete{ width: 70px; height: 30px; display: flex; justify-content: center; align-items: center; position: relative; left: 500px; margin-top: 50px; margin-bottom: 50px; border-radius: 50px;  }
+
+/*----------------------------------수정할 데이터박스----------------------------------------------------------------------------------------*/
+
+</style>
+</head>
+<body>
+    <th:block th:include="@{/thymeleaf/vendor/Header.html}"></th:block>
+    <main>
+       <h1>회원정보 수정</h1>
+       <div class="info_vendor">
+       
+       <div class="vendor_form">
+            <div class="vendor_formation">아이디</div>
+            <div class="vendor_write"><input type="text" name="vid" th:value="${vendor.vid}"></div>
+        </div>
+        
+        <div class="vendor_form">
+            <div class="vendor_formation">비밀번호</div>
+            <div class="vendor_write">
+            	<input class="pwd" type="password" name="pwd" id="pwd">
+            	<input class="pwd" type="password" name="pwd2" id="pwd2">
+            </div>
+        </div>
+ <!-------------이름쪽---------------------------->           
+        <div class="vendor_form" id="vendor_form_name">
+            <div class="vendor_formation">이름</div>
+            <div class="vendor_write"><input type="text" name="vname" th:value="${vendor.vname}"></div>   
+        </div>
+<!--------사업자 등록번호----------------------------->
+        <div class="vendor_form">
+            <div class="vendor_formation">사업자 등록번호</div>
+            <div class="vendor_write"><input type="text" name="license" th:value="${vendor.license}"></div>
+        </div>
+<!-------------전화번호------------------>
+        <div class="vendor_form">
+            <div class="vendor_formation">전화번호</div>
+            <div class="vendor_write"><input type="text" name="phone" th:value="${vendor.phone}"></div>
+        </div>
+<!--------------이메일------------------------------>
+        <div class="vendor_form">
+            <div class="vendor_formation">이메일</div>
+            <div class="vendor_write"><input type="text" name="email" th:value="${vendor.email}"></div>
+        </div>
+    	
+    	
+        </div>
+        
+<!------------------------------------------------------------------------------------------------------------------------------------------------>      
+            <button type="button"class='complete' onclick="">완료</button>
+</main>
+    <th:block th:include="@{/thymeleaf/vendor/Footer.html}"></th:block>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.web.user.search.SearchMapper">
+
+	<!-- 키워드로 검색한 결과 -->
+	<select id="searchMain"
+		parameterType="String"
+		resultType="map">
+		SELECT * FROM camping_main where cname LIKE '%'||#{keyword}||'%'
+		 OR address LIKE '%'||#{keyword}||'%'
+	</select>
+
+	<!--유저가 클릭한 캠핑장 상세보기 -->
+	<select id="usermapdetail" parameterType="Integer" resultType="map">
+	 select c.*,a.fname,a.anum,s.max_ppl,s.price,s.snum,f.pet,f.cook,f.bbq,f.fire,f.wifi,f.toilet,r.nickname,r.score,r.rnum,r.content
+	  from camping_main c 
+	  left outer join c_attach a on c.cnum = a.cnum 
+	  left outer join camping_site s on s.cnum = c.cnum
+	  left outer join facilities f on c.cnum = f.cnum
+	  left outer join review r on r.cnum = c.cnum
+	  where c.cnum=#{cnum}
+	</select>
+	
+	<select id="scoreAvg"
+		 parameterType="integer"
+		resultType="Float">
+		SELECT AVG(score) FROM review WHERE cnum=#{cnum}
+	</select>
+	
+	
+	<select id="userRecommend"
+			parameterType="list"
+			resultType="com.spring.web.vendor.vo.CampingMain">
+			
+		SELECT cname,address,phone,cnum
+		FROM CAMPING_MAIN 
+		WHERE 
+		cnum IN
+		  <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		    #{item}
+		  </foreach>
+		 ORDER BY CASE		 
+		  <foreach item="item" index="index" collection="list" separator=" ">
+		       WHEN CNUM = #{item} THEN #{index}
+		    </foreach>
+	     END ASC	    
+	</select>	
+	
+
+	
+</mapper>

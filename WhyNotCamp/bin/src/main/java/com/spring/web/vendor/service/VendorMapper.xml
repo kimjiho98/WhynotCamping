@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.web.vendor.service.VendorMapper"> 
+	<!-- vnum으로 vendor객체 불러오기 -->
+	<select id="getVendor" resultType="com.spring.web.vendor.vo.Vendor" parameterType="integer">
+		SELECT * FROM VENDOR WHERE VNUM=#{vnum}
+	</select>
+	
+	<!-- vendor객체 저장 -->
+	<insert id="addVendor" parameterType="com.spring.web.vendor.vo.Vendor">
+		INSERT INTO VENDOR(vnum,vid,pwd,license,phone,email,vname) VALUES
+		(VENDOR_SEQ.NEXTVAL,#{vid},#{pwd},#{license},#{phone},#{email},#{vname})
+	</insert>
+	
+	<!-- vid로 vendor객체 불러오기 -->
+	<select id="getVendorByVid" parameterType="String" resultType="com.spring.web.vendor.vo.Vendor">
+		SELECT * FROM VENDOR WHERE vid=#{vid}
+	</select>
+	
+	<!-- vid 중복체크 -->
+	<select id="vidCheck" parameterType="String" resultType="com.spring.web.vendor.vo.Vendor">
+		SELECT * FROM camp_user WHERE username=#{vid}
+	</select>
+	
+	<!--          cname 중복체크           -->
+	<select id="cnameCheck" parameterType="String" resultType="com.spring.web.vendor.vo.CampingMain">
+		SELECT * FROM CAMPING_MAIN WHERE cname=#{cname}
+	</select>
+	<!-- vendor에 해당하는 메인 정보들 뽑기 -->
+	<select id="getMainList" parameterType="integer" resultType="map">
+		SELECT c.*,b.bnum,b.regdate,b.checkin,b.ttlprice,b.checkout,b.ppl,b.confirm,q.question
+		FROM CAMPING_MAIN c LEFT OUTER JOIN booking b ON c.cnum=b.cnum
+		LEFT OUTER JOIN (
+		SELECT cnum,LISTAGG(question,',') WITHIN GROUP(ORDER BY question) AS question FROM question
+		GROUP BY cnum
+		) q
+		ON c.cnum=q.cnum
+		WHERE c.vnum=#{vnum} ORDER BY c.cnum
+	</select>
+	
+	<select id="getMain" parameterType="integer" resultType="map">
+		SELECT c.*,b.bnum,b.checkin,b.checkout,b.ppl,b.ttlprice,b.name AS bname,b.phone AS bphone,b.email,b.confirm,
+        q.qnum,q.unum,q.question,q.qregdate,q.nickname
+		FROM CAMPING_MAIN c LEFT OUTER JOIN booking b ON c.cnum=b.cnum
+        LEFT OUTER JOIN question q ON c.cnum=q.cnum
+		WHERE c.vnum=#{vnum}
+		ORDER BY b.bnum
+	</select>
+	
+	<!-- camping_main DB에 추가 -->
+	<insert id="addCamping" parameterType="com.spring.web.vendor.vo.CampingMain">
+		INSERT INTO camping_main (cnum,vnum,cname,address,phone,in_time,out_time,info,lat,lng)
+		VALUES (C_MAIN_SEQ.NEXTVAL,#{vnum},#{cname},#{address},#{phone},#{in_time},#{out_time},#{info},#{lat},#{lng})
+	</insert>
+	
+	<!-- 첨부파일 리스트 저장 -->
+	<update id="addCattach"  parameterType="list">
+		INSERT INTO C_ATTACH (anum,cnum,fname)
+		SELECT C_ATTACH_SEQ.NEXTVAL AS anum, t.* FROM
+		(
+			<foreach collection="list" item="att" separator="union all" >
+				 SELECT (SELECT MAX(cnum) FROM CAMPING_MAIN WHERE vnum=#{att.vnum}) AS cnum, #{att.fname} FROM DUAL
+			</foreach>
+		) t
+	</update>
+	
+	<!-- 해당 예약정보 승인 1로 바꿔줌 -->
+	<update id="bookingConfirm" parameterType="integer">
+		UPDATE booking SET confirm = 1 WHERE bnum=#{bnum}
+	</update>
+	
+	<!-- 해당 캠핑장 QnA 묶어서 불러오기 -->
+	<select id="getQnAByVnum" parameterType="integer" resultType="map">
+
+		SELECT * FROM question q LEFT JOIN answer a ON q.qnum=a.qnum WHERE q.cnum=(SELECT MAX(cnum) FROM camping_main WHERE vnum=#{vnum})
+	</select>	
+
+	<!-- 캠핑장 상세정보 -지환 -->
+	<select id="campingDetail"	parameterType='Integer'	resultType="map">
+	
+		SELECT * FROM CAMPING_MAIN c
+		LEFT OUTER JOIN CAMPING_SITE s ON c.cnum= s.cnum
+		LEFT OUTER JOIN C_ATTACH a ON c.cnum= a.cnum
+		LEFT OUTER JOIN FACILITIES f ON c.cnum=f.cnum
+		WHERE c.vnum=#{vnum}	
+		
+	</select>
+	
+	<!-- VENDOR XML에 ANSWER 달았을 때  알람테이블에 추가   -지환- -->
+	<insert id='addAlarmByAnswer'
+			parameterType='Integer'>
+	
+		INSERT INTO ALARM(ALNUM,UNUM,AVSR) VALUES(ALARM_SEQ.NEXTVAL,#{unum},1)
+			
+	</insert>
+	
+		<!-- VENDOR XML에 ANSWER 달았을 때  알람테이블에 추가   -지환- -->
+	<select id='getUnumByQ'
+			parameterType='Integer'
+			resultType='Integer'>
+	
+		SELECT UNUM FROM QUESTION WHERE qnum=#{qnum}
+			
+	</select>
+
+
+	<!-- CAMPINGMAIN 수정 - 지환 -->
+	<update id='updatemain'
+			parameterType="com.spring.web.vendor.vo.CampingMain">
+	
+		UPDATE CAMPING_MAIN SET ADDRESS=#{address},PHONE=#{phone},INFO=#{info},
+		IN_TIME=#{in_time},OUT_TIME=#{out_time},LAT=#{lat},LNG=#{lng}
+		WHERE vnum=#{vnum}	
+	
+	</update>
+
+	<!-- 부대 시설 수정 - 지환 -->
+	<update id='updateFaci'
+			parameterType="com.spring.web.vendor.vo.Facilities">
+	
+		UPDATE FACILITIES SET WIFI=#{wifi},PET=#{pet},COOK=#{cook},BBQ=#{bbq},FIRE=#{fire},TOILET=#{toilet}
+		WHERE cnum=#{cnum}	
+	
+	</update>
+	<!-- 캠핑 site 수정 - 지환 -->
+	<update id='updateSite'
+			parameterType="com.spring.web.vendor.vo.CampingSite">
+	
+		UPDATE CAMPING_SITE SET SNAME=#{sname},PRICE=#{price},MAX_PPL=#{max_ppl}
+		WHERE cnum=#{cnum} AND snum=#{snum}
+	
+	</update>
+	
+	<!-- 캠핑 site 삭제 - 지환 -->
+	<delete id='deleteSite'
+			parameterType="com.spring.web.vendor.vo.CampingSite">
+	
+		DELETE FROM CAMPING_SITE WHERE CNUM=#{cnum} AND SNUM=#{snum}
+	 
+	</delete>
+	
+	<!-- 캠핑 site 추가 - 지환 -->
+	<insert id='addOneSite'
+			parameterType="com.spring.web.vendor.vo.CampingSite">
+	
+		INSERT INTO CAMPING_SITE(SNUM,CNUM,MAX_PPL,PRICE,SNAME) 
+		VALUES(SITE_SEQ.NEXTVAL,#{cnum},#{max_ppl},#{price},#{sname})
+	 
+	</insert>
+	
+	<!-- 캠핑장 첨부사진 삭제 - 지환 -->
+	<delete id='deleteImg'
+			parameterType="com.spring.web.vendor.vo.C_Attach">
+	
+		DELETE FROM C_ATTACH WHERE CNUM=#{cnum} AND ANUM=#{anum}
+	
+	</delete>
+	
+	<!-- 캠핑장 첨부사진 추가 지환 -->
+	<update id="addImage"  parameterType="java.util.List">
+		INSERT INTO C_ATTACH
+		(anum,cnum,fname) 
+		SELECT C_ATTACH_SEQ.NEXTVAL, t.* FROM
+		(
+			<foreach collection='list' item='img' separator=" union all ">
+			SELECT			 
+			#{img.cnum}, #{img.fname} FROM DUAL	
+			</foreach>		
+		)t			
+	</update>
+	
+	<!-- 캠프유저테이블에 암호화하여 저장 -지환 -->
+	<insert id="addCampUser"
+			parameterType="com.spring.web.vendor.vo.Vendor">
+	
+		INSERT INTO CAMP_USER(USERNAME,PASSWORD) VALUES(#{vid},#{pwd})	
+	
+	</insert>
+	
+	<!-- 벤더권한부여 - 지환 -->
+	<insert id="addAuthorities"
+			parameterType="com.spring.web.vendor.vo.Vendor">
+	
+		INSERT INTO AUTHORITIES(USERNAME,AUTHORITY) VALUES(#{vid},'ROLE_VENDOR')	
+	
+	</insert>	
+	
+	<!-- 답변 등록 -->
+	<insert id="addAnswer" parameterType="com.spring.web.vendor.vo.Answer">
+		INSERT INTO answer (qnum,answer,cnum,asnum)
+		VALUES(#{qnum},#{answer},#{cnum},ANS_SEQ.NEXTVAL)
+	</insert>
+	
+	<!-- 부대시설 등록 -->
+	<insert id="addFacilities" parameterType="java.util.HashMap">
+		INSERT INTO facilities (cnum,pet,cook,wifi,bbq,fire,toilet)
+		VALUES((SELECT MAX(cnum) FROM CAMPING_MAIN WHERE vnum=#{vnum}),
+		#{fac.pet},#{fac.cook},#{fac.wifi},#{fac.bbq},#{fac.fire},#{fac.toilet})
+	</insert>
+
+	<!-- 사이트 등록 -->
+	<update id="addSite" parameterType="list">
+		INSERT INTO camping_site (snum,cnum,sname,max_ppl,price)
+		SELECT SITE_SEQ.NEXTVAL,s.* FROM
+
+		(
+			<foreach collection="list" item="site" separator="union all" >
+				SELECT (SELECT MAX(cnum) FROM CAMPING_MAIN WHERE vnum=#{site.vnum}) AS cnum, #{site.sname}, #{site.max_ppl},#{site.price} FROM DUAL
+			</foreach>
+		) s
+	</update>
+	
+	<!-- 예약 리스트 구하기 -->
+	<select id="getBookingList" parameterType='Integer' resultType="com.spring.web.vendor.vo.Booking">
+		SELECT b.* FROM booking b INNER JOIN CAMPING_SITE s ON b.snum=s.snum
+		 WHERE b.cnum=(SELECT cnum FROM CAMPING_MAIN WHERE vnum=#{vnum})
+	</select>
+	
+	<!-- 캠핑지 정보 가져오기 -->
+	<select id="getCampingMain"  parameterType='Integer' resultType="com.spring.web.vendor.vo.CampingMain">
+		SELECT * FROM CAMPING_MAIN WHERE vnum=#{vnum}
+	</select>
+
+</mapper>

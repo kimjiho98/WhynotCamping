@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CampingDetail</title>
+<style>
+
+@font-face {
+    font-family: 'Cafe24Oneprettynight';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Cafe24Oneprettynight.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body { font: system-ui; font-family: sans-serif; display: block; margin: auto; width:1500px; height:100%;}
+#middle{height:auto;  width:58% ; display: flex; justify-content :center; font-family: 'Cafe24Oneprettynight';  font-weight:bold; margin:auto;}
+main { display:inline-block; overflow:auto; width:600px;text-align:center; margin-top:40px;  margin-bottom:140px;}
+
+
+.list_facility li > div> img 
+{
+	width:35px;
+	height:35px;
+}	
+.list_facility 
+{
+	display:flex;
+	justify-content : center;
+}
+.list_facility li
+{
+	list-style: none; 
+    padding-left: 0px;
+    display: inline;
+    margin-right:15px;
+    text-align:center; 
+}	
+
+#campimg { 
+	width: 500px; height: 300px; object-fit: cover; border:10px double #e5e5e5; border-radius:0.8em;}
+
+/* Slideshow container */
+.slideshow-container {
+    width: 500px;
+    height : 300px;
+    position: relative;
+    margin: 0 auto;
+ } 
+  /* Hide the images by default */
+  .mySlides {
+    display: none;
+  }  
+  /* Next & previous buttons */
+  .prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    margin-top: -22px;
+    padding: 15px;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+  }  
+  /* Position the "next button" to the right */
+  .next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+  }
+  .prev {
+    left: 0;
+    border-radius: 3px 0 0 3px;
+  }
+  
+  /* On hover, add a black background color with a little bit see-through */
+  .prev:hover, .next:hover {
+    background-color: rgba(0,0,0,0.8);
+  }  
+  
+  /* Caption text */
+  .text {
+    color: #f2f2f2;
+    font-size: 15px;
+    padding: 8px 12px;
+    position: absolute;
+    bottom: 8px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  /* Number text (1/3 etc) */
+  .numbertext {
+    color: #f2f2f2;
+    font-size: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    top: 0;
+  }
+  /* The dots/bullets/indicators */
+  .dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+    background-color:#a39485;
+  }
+  
+  dot.active, .dot:hover {
+    background-color: #a39485;
+  }
+
+#siteinfo{	
+	border-radius:0.6em;
+	margin:40px;
+	padding:10px;
+	font-size:20px;  
+	display: inline-block; 
+	background-color:#e5e5e5;
+	box-shadow: 10px 10px 10px #A5BEBC;
+			}  
+.camplabel{border-bottom:5px double #a39485; color:#73685d; line-height:60px;}			
+.infotitle{border-top:2px dotted #a39485; border-bottom:2px dotted #a39485; font-size:24px; width:auto; color:#73685d;}			
+
+.frame {
+  width: 90%;
+  margin: 40px auto;
+  text-align: center;  
+}
+button {
+  margin: 20px;
+  outline: none;
+}
+#editbtn {
+   font-family: 'Cafe24Oneprettynight';
+  font-size:23px;
+  width: 170px;
+  height: 40px;
+  padding: auto;
+  border-radius: 0.3em;
+  border-color: #e5e5e5;
+  font-weight: bold;
+  background:#e5e5e5;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+  color: #73685d;
+}
+
+/* 1 */
+#editbtn {
+  transition: all 0.3s ease;
+}
+#editbtn:hover {
+   box-shadow:
+   -7px -7px 20px 0px #fff9,
+   -4px -4px 5px 0px #fff9,
+   7px 7px 20px 0px #0002,
+   4px 4px 5px 0px #0001;
+}
+
+</style>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/dbed6b6114.js" crossorigin="anonymous"></script>
+<script>
+
+var slideIndex = 1;
+window.onload =function(){
+showSlides(slideIndex);
+}
+// Next/previous controls
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+
+// Thumbnail image controls
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+  let i;
+  let slides = document.getElementsByClassName("mySlides");
+  let dots = document.getElementsByClassName("dot");
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+    dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " active";
+  
+}
+</script>
+</head>
+<body>
+<th:block th:include="@{/thymeleaf/vendor/Header.html}"></th:block>
+	<div id='middle' style="border-left:6px double #73685d ; border-right:6px double #73685d ">
+	 <main>	 	
+		<div style="font-size:70px; color:#73685d;  margin-top:50px; margin-bottom:80px;" th:text="${cmain.camp.cname}"></div>
+		<div style="margin-bottom:100px;">
+			<label class='infotitle'>　캠핑장정보　</label><p>	
+		
+			<div style="text-align:left; font-size:24px; padding-left:40px;border:5px double #e5e5e5; margin:60px; border-radius:0.6em; width:auto;">
+				<label class="camplabel">ADDRESS</label>　<span th:text="${cmain.camp.address}"></span><br>
+				<label class="camplabel">PHONE</label>　<span th:text="${cmain.camp.phone}"></span><br>
+				<label class="camplabel">INFO</label>　<span th:text="${cmain.camp.info}"></span>
+			</div>
+		</div>
+		
+		<label class='infotitle'>　시설정보　</label><p>	
+		<div style="border:5px double #e5e5e5 ; border-radius:0.6em; margin-top:50px;margin-bottom:130px;">	
+		<ul class="list_facility" style="padding:auto; ">
+		
+	    <li th:if="${cmain.fac.wifi == 1}">
+	    <div><img src="/img/wifi.jpeg"></div>
+	    <span class="color_g">WIFI</span></li>
+	     <li th:if="${cmain.fac.wifi == 0}">
+	    <div><img src="/img/no-wifi.jpeg"></div>
+	    <span class="color_g">WIFI불가</span></li>	    
+	    <li th:if="${cmain.fac.pet == 1}">
+	    <div> <img src="/img/animal.jpeg"></div>
+	    <span class="color_g">동물출입</span></li>
+	     <li th:if="${cmain.fac.pet == 0}" >
+	    <div><img src="/img/no-animal.jpeg"></div>
+	    <span class="color_g">동물출입불가</span>
+	    </li>	    
+	    <li th:if="${cmain.fac.cook == 1}">
+	    <div><img src="/img/cook.jpeg"></div>
+	    <span  class="color_g">취사</span></li>	    
+	    <li th:if="${cmain.fac.cook == 0}">
+	    <div><img src="/img/no-cook.jpeg"></div>
+	    <span class="color_g">취사불가</span></li>　	    
+	    <li th:if="${cmain.fac.bbq == 1}">
+	    <div><img src="/img/bbq.jpeg"></div>
+	    <span class="color_g">바베큐</span></li>
+	    <li th:if="${cmain.fac.bbq == 0}">
+	    <div><img src="/img/no-bbq.jpeg"></div>
+	    <span class="color_g">바베큐불가</span></li>	    
+	    <li  th:if="${cmain.fac.fire == 1}">
+	    <div ><img src="/img/fire.jpeg"></div>
+	    <span class="color_g">캠프파이어</span></li>
+	    <li th:if="${cmain.fac.fire == 0}">
+	    <div><img src="/img/no-fire.jpeg"></div>
+	    <span class="color_g">캠프파이어불가</span></li>    
+	    <li th:if="${cmain.fac.toilet == 1}">
+	    <div><img src="/img/toilet.jpeg"></div>
+	    <span class="color_g">화장실</span></li>
+	    <li  th:if="${cmain.fac.toilet == 0}">
+	    <div><img src="/img/no-toilet.jpeg"></div>
+	    <span class="color_g">화장실없음</span></li>	 	 
+	</ul>
+	</div>		
+	
+	<label class='infotitle'>　배치도사진　</label><p>	
+	<div th:if="${cmain.mapatt.fname!=null}">
+		<img class="campimg" style="width:500px; height:300px; margin-top:50px; margin-bottom:50px; border:10px double #e5e5e5; border-radius:0.8em;" th:src="@{'/camping/'+${cmain.camp.cname}+'/'+${cmain.mapatt.fname}}"><br>					
+	</div>
+	<p>
+	
+	<label class='infotitle'>　첨부사진　</label><p>	
+	<div style="margin-top:50px; margin-bottom:50px;">	
+	 <div class="slideshow-container">	
+		<div class='mySlides fade' th:each="a , iStat:${cmain.camp.attList}">
+			<div class="numbertext">[[${iStat.index+1}]] / [[${iStat.size}]]</div>
+			<div class="slide-img">
+				<img id="campimg" style="aspect-ratio: 16/ 9" th:src="@{'/camping/'+${cmain.camp.cname}+'/'+${a.fname}}" >
+			</div>
+		</div>		
+		 <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+	     <a class="next" onclick="plusSlides(1)">&#10095;</a>		
+	 </div><p>
+	  <div style="text-align:center; margin-top:30px;">
+	     <span th:each="att, iStat:${cmain.camp.attList}">
+	     <span class="dot" th:onclick="'currentSlide('+${iStat.index+1}+')'"></span>
+		 </span>
+	  </div>
+	</div>	
+	
+	<div style="margin-top:120px; margin-bottom:50px">
+		<label class='infotitle'>　사이트정보　</label><p>	
+	</div>	
+	
+	<div id="siteinfo" th:each="s : ${cmain.camp.siteList}" >		
+	 	<label style='font-size:23px;font-weight:bold; color: #73685d;'>[[${s.sname}]]</label> 
+	 	<br> PRICE : [[${s.price}]]원 <br> MAXPPL(최대인원) : [[${s.max_ppl}]] 명<br>
+	</div>			
+	<div id='frame'>
+		<a th:href="|/vendor/campingedit|">
+		<button id='editbtn'>캠핑지 정보 수정</button></a>
+	</div>
+	</main>
+	
+	</div>
+<th:block th:include="@{/thymeleaf/vendor/Footer.html}"></th:block>
+</body>
+</html>

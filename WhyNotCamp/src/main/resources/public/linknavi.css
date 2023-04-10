@@ -1,0 +1,75 @@
+@font-face {
+    font-family: 'Cafe24Ohsquareair';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2202@1.0/Cafe24Ohsquareair.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html,body{
+	margin:0;
+    height: 100%;
+    padding : 0;	
+}
+
+.uinfo_nav{	
+	float:left;
+	width: 300px;
+	height: 100vh;
+	background-color: white;
+	overflow:hidden;
+	border: 10px solid;
+}
+
+.uinfo_nav>.uinfo_navbar { 
+  font-family: 'Cafe24Ohsquareair';
+  font-size: 30px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 300px;
+  height: 100vh;
+  float:left; 
+  border-right:5px double black;
+  overflow:hidden;
+  white-space: nowrap;
+}
+
+.uinfo_nav>.uinfo_navbar>li>a {
+  display: block;
+  color:rgb(96, 163, 172);
+  padding: 5px 30px;
+  text-decoration: none;
+  margin:10px;
+  overflow: hidden;
+  position: relative;
+  overflow:hidden;
+}
+
+.uinfo_navbar a span {
+  z-index: 20;
+}
+
+.uinfo_navbar a:after {
+  background: black;
+  content: "";
+  height: 155px;
+  left: -75px;
+  opacity: 0.2;
+  position: absolute;
+  top: -50px;
+  -webkit-transform: rotate(35deg);
+  transform: rotate(35deg);
+  transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
+  width: 50px;
+  z-index: 1;
+  transition-delay: 0.4s;
+}
+
+.uinfo_navbar a:hover:after {
+  left: 120%;
+  transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.uinfo_nav>.uinfo_navbar>li>a:hover {  
+  color: rgb(49, 73, 113);
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Web Socket Example</title>
+<link rel="stylesheet" href='/css/linknavi.css'>
+<style>
+
+@font-face {
+    font-family: 'NanumSquareNeo-Variable';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/NanumSquareNeo-Variable.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+#messageTextArea{ border:10px double gray;
+ border-radius:0.6em;
+  font-family: 'NanumSquareNeo-Variable';
+ background-color:#AED4E8 ; 
+ font-size: 20px;
+ margin-top:30px;
+}
+@media(max-width: 400px){
+body{
+    margin : 0 ;
+}
+}
+
+.container{	
+	height:100vh;	
+	width:100%;
+	display:inline-flex;
+	font-family: 'YanoljaYacheR';
+    font-size: 23px;
+	overflow-x:auto;
+}
+
+.content{	
+	border-left: 5px double gray;
+	width:1100px;
+	overflow:auto;
+	white-space: nowrap;
+	padding-left:100px;
+} 
+
+#textMessage{ font-family: 'NanumSquareNeo-Variable';font-size: 20px; border:3px solid gray; margin-top:20px; width:450px;}
+</style>
+</head>
+<body>
+<th:block th:include="@{/thymeleaf/user/Header.html}"></th:block>
+
+
+<div class='container'>
+
+	<div class='navi' th:include="@{/fragments/naviMyinfo.html}"></div>
+
+	<div class='content'>
+
+  <!-- 채팅 영역 -->
+  <br />
+  <!-- 서버와 메시지를 주고 받는 콘솔 텍스트 영역 -->
+  <textarea id="messageTextArea" rows="24" cols="45" disabled="disabled"></textarea>
+  <form>
+    <!-- 텍스트 박스에 채팅의 내용을 작성한다. -->
+    <input id="textMessage" type="text" placeholder='메세지를 입력하세요.' onkeydown="return enter()">
+    <!-- 서버로 메시지를 전송하는 버튼 -->
+    　<input onclick="sendMessage()" value="입력" type="button">
+  </form>
+  <script type="text/javascript">
+    // 서버의 broadsocket의 서블릿으로 웹 소켓을 한다.
+    var webSocket = new WebSocket("ws://192.168.0.22/broadsocket");
+    // 콘솔 텍스트 영역
+    var messageTextArea = document.getElementById("messageTextArea");
+    // 접속이 완료되면
+    webSocket.onopen = function(message) {
+      // 콘솔에 메시지를 남긴다.
+      messageTextArea.value += "관리자 대기중..\n";
+    };
+    // 접속이 끝기는 경우는 브라우저를 닫는 경우이기 떄문에 이 이벤트는 의미가 없음.
+    webSocket.onclose = function(message) { };
+    // 에러가 발생하면
+    webSocket.onerror = function(message) {
+      // 콘솔에 메시지를 남긴다.
+      messageTextArea.value += "error...\n";
+    };
+    // 서버로부터 메시지가 도착하면 콘솔 화면에 메시지를 남긴다.
+    webSocket.onmessage = function(message) {
+      messageTextArea.value += "상담원 : " + message.data + "\n";
+    };
+    // 서버로 메시지를 발송하는 함수
+    // Send 버튼을 누르거나 텍스트 박스에서 엔터를 치면 실행
+    function sendMessage() {
+      // 텍스트 박스의 객체를 가져옴
+      let message = document.getElementById("textMessage");
+      // 콘솔에 메세지를 남긴다.
+      messageTextArea.value += "고객 : " + message.value + "\n";
+      // 소켓으로 보낸다.
+      webSocket.send(message.value);
+      // 텍스트 박스 추기화
+      message.value = "";
+    }
+    // 텍스트 박스에서 엔터를 누르면
+    function enter() {
+      // keyCode 13은 엔터이다.
+      if(event.keyCode === 13) {
+        // 서버로 메시지 전송
+        sendMessage();
+        // form에 의해 자동 submit을 막는다.
+        return false;
+      }
+      return true;
+    }
+  </script>
+  
+	</div>
+</div>
+ <th:block th:include="@{/thymeleaf/user/Footer.html}"></th:block>  
+</body>
+</html>

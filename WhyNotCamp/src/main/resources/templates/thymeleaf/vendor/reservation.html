@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>예약 정보</title>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+$(function(){
+	var num =  parseInt(document.location.href.split('reservation/')[1]);
+	var pages = [[${pages}]];
+	$('#a'+num).css('color','black');
+	if (num ==1){
+		$('#prev').css('color','grey')
+		if ((num+1)>pages){
+			$('#next').css('color','grey')
+		}
+		else {
+			$('#next').attr('href','/vendor/reservation/'+(num+1))
+		}
+	}
+	else {
+		$('#prev').attr('href','/vendor/reservation/'+(num-1))
+		if ((num+1)>pages){
+			$('#next').css('color','grey')
+		}
+		else {
+			$('#next').attr('href','/vendor/reservation/'+(num+1))
+		}
+	}
+		
+})
+function book_confirm(bnum)
+{
+   var dat = {'bnum':bnum};
+   $.ajax({
+       url : '/vendor/confirm',
+       method:'post',
+       data : dat,
+       dataType : 'text',
+       success : function(res)   {
+          if(res=='true') {
+             alert("승인완료");
+          }
+          location.reload();
+       },
+       error : function(xhr,status,err){
+          alert(err);
+       }
+    });
+}
+</script>
+</head>
+<style>
+	main {position:relative; width:100%; margin: 0 auto; height: 850px; margin-top:50px;text-align: center;}
+	table {border: 1px #a39485 solid; font-size: .9em; box-shadow: 0 2px 5px rgba(0,0,0,.25); width: 65%;font-size:20px;
+      border-collapse: collapse; border-radius: 5px; overflow: hidden; text-align: left;margin: 0 auto; margin-bottom: 10px;}
+	thead { font-weight: bold; color: #fff; background: #73685d;}
+	td, th { padding: .3em .2em; vertical-align: middle;text-align: center; background-clip: padding-box; scroll-snap-align: start;}
+	td {border-bottom: 1px solid #e5e5e5;}
+	.pages {text-decoration: none; font-size: 25px;color:#73685d;font-weight: bold;margin:5px;}
+	.move_btn {text-decoration: none; font-size: 30px;font-weight: bold;color:black; }
+	.pages:hover {text-decoration: underline;}
+</style>
+<body>
+<th:block th:include="@{/thymeleaf/vendor/Header.html}"></th:block>
+<main>
+	<div class="bookingList">
+         <table>
+         <thead>
+            <tr>
+               <td colspan="10" >예약 리스트</td>
+            </tr>
+            <tr style="background: grey;">
+               <th>예약 번호</th><th>사이트이름</th><th>체크인</th><th>체크아웃</th><th>인원</th><th>결제금액</th>
+               <th>예약자 성함</th><th>전화번호</th><th>이메일</th><th colspan="2">예약승인</th>
+            </tr>
+         </thead>
+  
+         <tbody th:if="${blist!=null}">
+            <tr th:each="book : ${blist}">
+               <td class="bnum"  th:text="${book.bnum}"></td>
+               <td class="sname" th:text="${book.sname}"></td>
+               <td class="check" th:text="${book.checkin}"></td>
+               <td class="check" th:text="${book.checkout}"></td>
+               <td class="ppl" th:text="${book.ppl}"></td>
+               <td class="ttl_price" th:text="${book.ttlprice/10000+' 만원'}"></td>
+               <td class="name" th:text="${book.name}"></td>
+               <td class="phone" th:text="${book.phone}"></td>
+               <td class="email" th:text="${book.email}"></td>
+               <td class="confirm"  th:if="${book.confirm==1}">O</td>
+               <td th:unless="${book.confirm==1}"><button type="button" th:onclick="|book_confirm(${book.bnum})|">승인</button></td>
+            </tr>
+         </tbody>
+         <tbody th:if="${blist==null or blist.size()==0}">
+            <tr><td style="color: grey;" colspan="9">예약 정보가 존재하지 않습니다</td></tr>
+         </tbody>
+         </table>
+         <a id ="prev" class="move_btn">< </a>
+         <a th:each="i:${#numbers.sequence(1,pages)}" class = "pages"
+         	 th:href="|/vendor/reservation/${i} |" th:id="a+${i}">[[${i}]]</a>
+         <a id ="next" class="move_btn"> ></a>
+      </div>   
+</main>
+<th:block th:include="@{/thymeleaf/vendor/Footer.html}"></th:block>
+</body>
+</html>

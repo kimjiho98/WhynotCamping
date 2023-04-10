@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>지오마켓</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/market/carrot.png">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css">
+    <script type="text/javascript">	
+    $(function(){
+            $('.main_adder').slick({
+                slide: 'div',        //슬라이드 되어야 할 태그 ex) div, li 
+                infinite : true,     //무한 반복 옵션     
+                slidesToShow : 1,        // 한 화면에 보여질 컨텐츠 개수
+                slidesToScroll : 1,        //스크롤 한번에 움직일 컨텐츠 개수
+                speed : 4000,     // 다음 버튼 누르고 다음 화면 뜨는데까지 걸리는 시간(ms)
+                arrows : false,         // 옆으로 이동하는 화살표 표시 여부
+                dots : true,         // 스크롤바 아래 점으로 페이지네이션 여부
+                autoplay : true,            // 자동 스크롤 사용 여부
+                autoplaySpeed : 5000,         // 자동 스크롤 시 다음으로 넘어가는데 걸리는 시간 (ms)
+                pauseOnHover : true,        // 슬라이드 이동    시 마우스 호버하면 슬라이더 멈추게 설정
+                vertical : false,        // 세로 방향 슬라이드 옵션
+                prevArrow : "<button type='button' class='slick-prev'>Previous</button>",        // 이전 화살표 모양 설정
+                nextArrow : "<button type='button' class='slick-next'>Next</button>",        // 다음 화살표 모양 설정
+                dotsClass : "slick-dots",     //아래 나오는 페이지네이션(점) css class 지정
+                draggable : true,     //드래그 가능 여부 
+                
+                responsive: [ // 반응형 웹 구현 옵션
+                    {  
+                        breakpoint: 960, //화면 사이즈 960px
+                        settings: {
+                            //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
+                            slidesToShow:1 
+                        } 
+                    },
+                    { 
+                        breakpoint: 768, //화면 사이즈 768px
+                        settings: {    
+                            //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
+                            slidesToShow:1 
+                        } 
+                    }
+                ]
+ 
+            });
+            $('.objectlist').slick({
+                slide: 'ul',        //슬라이드 되어야 할 태그 ex) div, li 
+                infinite : true,     //무한 반복 옵션     
+                slidesToShow : 5,        // 한 화면에 보여질 컨텐츠 개수
+                slidesToScroll : 1,        //스크롤 한번에 움직일 컨텐츠 개수
+                speed : 5000,     // 다음 버튼 누르고 다음 화면 뜨는데까지 걸리는 시간(ms)
+                arrows : false,         // 옆으로 이동하는 화살표 표시 여부
+                dots : true,         // 스크롤바 아래 점으로 페이지네이션 여부
+                autoplay : true,            // 자동 스크롤 사용 여부
+                autoplaySpeed : 5000,         // 자동 스크롤 시 다음으로 넘어가는데 걸리는 시간 (ms)
+                pauseOnHover : true,        // 슬라이드 이동    시 마우스 호버하면 슬라이더 멈추게 설정
+                vertical : false,        // 세로 방향 슬라이드 옵션
+                prevArrow : "<button type='button' class='slick-prev'>Previous</button>",        // 이전 화살표 모양 설정
+                nextArrow : "<button type='button' class='slick-next'>Next</button>",        // 다음 화살표 모양 설정
+                dotsClass : "slick-dots",     //아래 나오는 페이지네이션(점) css class 지정
+                draggable : true,     //드래그 가능 여부 
+                
+                responsive: [ // 반응형 웹 구현 옵션
+                    {  
+                        breakpoint: 960, //화면 사이즈 960px
+                        settings: {
+                            //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
+                            slidesToShow:3 
+                        } 
+                    },
+                    { 
+                        breakpoint: 768, //화면 사이즈 768px
+                        settings: {    
+                            //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
+                            slidesToShow:2
+                        } 
+                    }
+                ]
+ 
+            });
+        	$('.alarmOff').css('display','');
+    		$('.alarmOn').css('display','none');
+    		$('detail').css('display','none');
+    		$('#alnav').css('display','none');    	
+            var nickname= "[[${session.nickname}]]";
+           
+               if(nickname!="")
+               {
+    				$('.info_login').text("[[${session.nickname}]] 님")	
+    				$('.info_login').css("font-weight","600")
+    				$('.info_login').css("overflow","hidden");
+    				$('.info_register').text("로그아웃")
+    				$('.info_register').css("cursor","pointer")
+    				$('.info_register').click(function(){
+    					location.href="/user/logout";
+    				})		
+               }
+           
+          });
+          (function poll(){
+      	    $.ajax({
+      	    	url: "/userinfo/alCheck",
+      	    	method : 'post',
+      	    	success: function(res){
+      	    		if(res.bell)
+      				{	   			
+      					alarmOn();						
+      				}
+      	    	},
+      	    	dataType: "json",
+      	    	complete: poll,
+      	    	timeout: 100000
+      	    	});
+      	})();		
+
+      	function alarmOn(){
+      		$('.alarmOff').css('display','none');
+      		$('.alarmOn').css('display','');
+      		$('.detail').css('display','');
+      	}	
+      	
+      	const vibration = (target) => {
+      		  target.classList.add("vibration");
+
+      		  setTimeout(function() {
+      		    target.classList.remove("vibration");
+      		  }, 6000);
+      		}
+      	
+      	function openAlarm(){
+      		
+      		$.ajax({
+      			url : '/userinfo/getalist',	
+      			method : 'post',													
+      			cache : false,		
+      			dataType:'json',       
+      			success : function(res) {
+      				//alert(JSON.stringify(res));
+      				$.each(res.list, function(index, item) {
+      					
+      					$("#almsgs").append("<a style='border-bottom:2px solid black; border-radius:0.5em; font-size:12px' href='" + item.url + "'>" + item.msg +"</a>" + "<br>");
+      					$("#almsgs").append("<a href='/userinfo/removeAlarm/" + item.alarm.unum+"/"+item.alarm.alnum+"'>닫기</a>");
+      				});
+      			},
+      			error : function() {
+      				alert('error');			
+      			}
+      		});
+      		
+      		$('#alnav').css('display','');
+      	}
+      	
+      	function closenav(){
+      	    $('#alnav').css('display','none');	    
+      	}
+          
+    </script>
+<style>
+/*-----------------------------서브 네비 부분 ------------------------------------------------------------------------*/
+.subnav{width: 1100px; height: 100px;  display: flex; position: relative; left: 350px; align-items: center; justify-content: center; font-weight: 900; font-size: large; }
+@media screen and (max-width:1600px){.subnav{position: relative; left: 160px; }}
+.subnav .subnav_1 a{color: black; font-size: 17px; text-decoration: none ; cursor: pointer; }
+.subnav .subnav_2{margin-left: 100px; cursor: pointer;}
+.subnav .subnav_2 a{color: black; text-decoration: none; }
+/*------------------------------ 광고 부분------------------------------------------------------------------------*/        
+body{display: block; margin: 0;  height: auto;  }
+.main{width: 100%;}
+.mainBnner_BG{width: 100%; position: relative; height: 660px; }
+.main_adder{width: 1100px;height: auto;  position: absolute; left: 350px; top: 120px; margin-top: 155px;cursor: pointer;} 
+@media screen and (max-width:1600px){.main_adder{left: 160px;}}
+.main_adder img{width: 1100px; }
+
+
+/*--------------------------------카테고리 부분-----------------------------------------------------------------------------*/
+.category{width: 100vw; height: 300px; position: relative; top: 50px;  border-top: 1px solid; }
+.category .category_section_01{ width: 1100px; height: 150px; display: flex; flex-direction: row; position: relative; left: 350px;}
+@media screen and (max-width: 1600px){.category .category_section_01{position: relative;left: 160px;}}
+.category .category_section_01 ul{width: 180px; height: 100px; display: flex; justify-content: center;  border: 1px solid; position: relative;  top: 30px; list-style: none; flex-direction: column; border-right: 0px;}
+.category .category_section_01 ul:last-child{border-right: 1px solid;}
+.category .category_section_01 ul li{position: relative; left: 50px;}
+
+.category .category_section_02{ width: 1100px; height: 150px; display: flex; flex-direction: row; position: relative; left: 350px;}
+.category .category_section_02 ul{width: 180px; height: 100px; display: flex; justify-content: center;  border: 1px solid; position: relative;  list-style: none; flex-direction: column; border-right: 0px; bottom: 20px; border-top: 0px;}
+@media screen and (max-width: 1600px){.category .category_section_02{position: relative;left: 160px;}}
+.category .category_section_02 ul:last-child{border-right: 1px solid;}
+.category .category_section_02 ul:first-child li:last-child{position: relative; left: 50px;}
+.category .category_section_02 ul li:first-child{position: relative; left: 50px;}
+.category .category_section_02 ul li:last-child{position: relative; left: 35px;}
+.category .category_section_02 ul:nth-child(4) li:last-child{position: relative; left: 40px;}
+
+
+/*--------------------------------상품리스트 부분-----------------------------------------------------------------------------*/
+.salelist{border: 1px solid red; width: 1100px; height: 1000px; position: relative; left: 350px; bottom: 3px; display: none; }
+@media screen and (max-width: 1600px){.salelist{position: relative;left: 160px;}}
+/*--------------------------------최근상품리스트 부분-----------------------------------------------------------------------------*/
+.recentlist{ width: 1100px; height: 400px; position: relative; left: 350px; top: 100px;}
+@media screen and (max-width: 1600px){.recentlist{position: relative;left: 160px;}}
+h1{display: block; width: 1100px; height: 50px; }
+.recentlist .objectlist{width:1100px; height: 350px; display: flex; flex-direction: row;}
+.recentlist .objectlist .object{list-style: none; margin: 0px; padding: 0px;}
+.recentlist .objectlist .object .object_img{width:200px; height: 200px; }
+.recentlist .objectlist .object .object_img img {width: 200px; height: 200px;}
+.recentlist .objectlist .object .object_title {width:200px; height: 50px; font-size: 14px;}
+.recentlist .objectlist .object .object_price{width:200px; height: 50px; color: red;	}
+/*--------------------------------사이드 부분-----------------------------------------------------------------------------*/
+.aside{ display: flex; flex-direction: column; justify-content: center; position: fixed; width: 100px; height: 200px; left: 1600px; top: 300px; z-index: 1; }
+@media screen and (max-width: 1600px){.aside{position: fixed;left: 1250px; top: 200px;}}
+.aside img{width: 35px;height: 40px; padding-left: 30px; margin-bottom: 20px;}
+
+ @keyframes slide {
+    0% {transform: translateY(0px);}
+    10% {transform: translateY(-70px);}
+    20% {transform: translateY(-120px);}
+    30% {transform: translateY(-180px);}
+    40% {transform: translateY(-230px);}
+    50% {transform: translateY(-280px);}
+    60% {transform: translateY(-330px);}
+    70% {transform: translateY(-380px);}
+    80% {transform: translateY(-430px);}
+    100% {transform: translateY(-480px);}
+    
+    
+  }
+body{display: block; margin: 0;}
+header{width:100%;height: auto; }
+header .main_header{ height: 150px; display: flex; background-color: white; color: black; position: static;  width:100%; border-bottom: 1px solid;}
+header .main_header .main_logo{display: inline-block; position: relative; top: 20px; font-family:SaenggeoJincheon ; font-size: 40px;  height: fit-content; }  
+header .main_header .main_logo a { display: flex; align-items: center; text-decoration: none; color: black; width: 300px;height: 100px;}
+header .main_header .main_logo img{width: 100px; height: 100px; margin-left: 40px;}
+@media screen and (max-width:1600px){header .main_header .main_logo{display: inline-block; position: relative; top: 20px; font-family:SaenggeoJincheon ; font-size: 35px;  height: fit-content; }}
+@media screen and (max-width:1600px){header .main_header .main_logo img{width: 80px; height: 80px; margin-left: 40px;}}
+
+header .main_header .search_0{display:inline-block; }
+header .main_header div.search {display: flex; align-items: center;  position: relative; left:50px; }
+@media screen and (max-width:1600px){header .main_header div.search {display: flex; align-items: center;  position: relative; left:30px; }}
+header .main_header div.search input{width: 300px; height: 30px; border: 2px solid black; border-radius: 100px; padding-left: 20px; }
+@media screen and (max-width:1600px){header .main_header div.search input{width: 240px; height: 30px; border: 2px solid black; border-radius: 100px; padding-left: 20px; }}
+header .main_header div.search{ width: 500px; height: 50px; overflow: hidden; margin-top: 50px;}
+@media screen and (max-width:1600px){header .main_header div.search{ width: 500px; height: 50px; overflow: hidden; margin-top: 50px; font-size: 14px;}}
+header .main_header div.search ul.area{position: relative; left: 10px; list-style: none;  }
+header .main_header div.search ul.area li:first-child{margin-top: 500px;}
+header .main_header div.search ul.area li {margin-top: 30px; animation: slide 30s infinite;}
+header .main_header div.search ul.area li::before{content: 'HOT'; color: red; border: 1px solid rgb(255, 0, 0); font-size: 12px; padding: 3px; margin-right: 7px;}
+@media screen and (max-width:1600px){header .main_header div.search ul.area li::before{content: 'HOT'; color: red; border: 1px solid rgb(255, 0, 0); font-size: 10px; padding: 3px; margin-right: 7px;}}
+
+header .main_header div.information { position: relative; left: 700px; width: 300px; height: 150px; }
+@media screen and (max-width:1600px){ header .main_header div.information{position: relative; left:300px;}}
+header .main_header div.information ul.info_top{display:flex; padding: 0px; }
+header .main_header div.information ul.info_top li{ list-style: none; margin-left: 10px;border-left: 1px solid black; position:relative; left:30px; padding-left:10px; color: black;  }
+header .main_header div.information ul.info_top li:first-child {border: 0px; }
+header .main_header div.information ul.info_top li a{text-decoration: none; color: black;}
+
+header .main_header div.information ul.info_btm {width:250px; height: auto;}
+header .main_header div.information ul.info_btm li{ margin-left: 15px; list-style: none; display: inline-block; }
+header .main_header div.information ul.info_btm li a {display: flex; flex-direction: column; align-self: center; text-decoration: none; align-items: center; color: black; cursor: pointer;  }
+header .main_header div.information ul.info_btm img{width: 40px;height: 40px;}
+
+/*------------------------------------------nav_bar--------------------------------------------------------------------------------------------------------------------*/
+/*네비 눌렷을때 box-shadow: rgba(0, 0, 0, 0.35) 0px -50px 36px -28px inset;*/
+.nav {position: absolute; top: 0; left: 1100px;  width: 300px; height: 50px; font-size: 15px; display: flex;} 
+@media screen and (max-width:1600px){.nav{font-size: 13px; left: 900px; width:200px;}}    
+.nav .menu1{width: 150px; height: 30px;  display: flex; align-items: center; justify-content: center; border: 2px solid gainsboro; border-top: 0;box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px; cursor: pointer;}
+.nav .menu2{width: 150px; height: 30px;  display: flex; align-items: center; justify-content: center; border: 2px solid gainsboro; border-top: 0;box-shadow: rgba(0, 0, 0, 0.35) 0px -50px 36px -28px inset; border-left:0px; cursor: pointer;}
+@media screen and (max-width:1600px){.nav .menu1{width: 100px;}}
+@media screen and (max-width:1600px){.nav .menu2{width: 100px;}}
+.nav .menu1 img{padding-right: 10px;}
+.nav .menu2 img{padding-right: 10px;}
+.nav .menu1:hover{ background-color:gainsboro;}
+.nav .menu2:hover{ background-color:gainsboro;}
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+    
+
+.box{
+  animation: vibration .1s infinite;
+}
+
+@keyframes vibration {
+  from {
+    transform: rotate(3deg);
+  }
+  to {
+    transform: rotate(-3deg);
+  }
+}
+
+#alnav{ position: absolute ; 
+		top:130px;
+		right:130px; 
+		border:5px double black;
+		background-color: white;
+		min-height: 140px;
+		height: auto;
+		width: 290px;
+		overflow:auto;
+		border-radius: 0.5em;
+		text-align:center;
+		line-height: 30px;
+}
+ 		
+#alnav>#alulnavId>div{
+	height: 50px;
+	align:center;
+	text-align:center;	
+} 		
+
+#alnav>#alulnavId>div>a{
+	  text-decoration: none;
+	  text-align:center;
+}    
+    
+    
+.footer{width:100%; height: auto; margin-top: 250px;}
+</style>
+</head>
+
+
+<body>
+ <header>
+        <div class="main_header">
+          <div class="main_logo"><a href="/user/main"><img src="/img/bonfire.png">캠핑어때</a></div>
+            <div class="search_0"><div class="search"><input type='text' name="area" placeholder="　검색어를 입력해주세요"><ul class="area"><li>충북 제천</li><li>충북 단양</li><li>강원 원주</li><li>경기 가평</li><li>강원 홍천</li><li>강원 춘천</li><li>경기 포천</li><li>경기 양평</li></ul></div></div>
+                <div class="information">
+                     <ul class="info_top">
+                        <li class="info_login"><a href="/user/loginpage">로그인</a>
+                        <li class="info_register"><a href="/user/register"> 회원가입</a></li>
+                        <li><a href="/user/info">고객센터</a></li>
+                     </ul>
+                     <ul class="info_btm">                     
+                     <li><a href="/userinfo/myinfo"><img src="/img/Header/header_personal.png">개인메뉴</a></li>
+                     <li><a href="/userinfo/mybooking"><img src="/img/Header/header-reservation.png">예약확인</a></li>
+                     <li>                    
+                     	<a class='alarmOn'>
+                         	<img class='box' src="/img/Header/header-alarm-on.png" onclick="openAlarm()">알림                    	 
+		                </a>                    	                    
+	                    <a class='alarmOff' >
+	                    	<img src="/img/Header/header-alarm.png" >알림
+	                    </a>	                    
+	                 </li>
+                    
+                    </ul>
+                     
+                </div>
+        </div>
+        
+        <div id="alnav" onclick="closenav();" >
+			   <div class="alulnav" id="alulnavId">
+			   		<div id="almsgs"></div>
+			   		<div id="removeAlarm"></div>		   			   		    	
+			   	</div>
+			</div>
+        
+        <div class="nav">                        
+            
+            <div class="menu1"><img src="/img/Header/boarder.png">게시판</div>
+            <div class="menu2"><img src="/img/Header/carrot.png">당근마켓</div>
+        
+        </div>
+        </header>
+<div class="subnav">
+    <div class="subnav_1"><a href="/market/purchase">구매하기</a></div>
+    <div class="subnav_2"><a href="/market/sellform">판매하기</a></div>
+</div>
+<!----------------------------------------------사이드부분-------------------------------------------------------------------->
+<div class="aside">
+    <img src="/market/up-arrow.png">
+    <img src="/market/chat.png">
+    <img src="/market/down-arrow.png">
+</div>
+<!----------------------------------------------광고-------------------------------------------------------------------->
+<img class="mainBnner_BG "src="/market/mainBnner_BG.jpg">
+<div class="main">
+    <div>
+        <div class="main_adder">
+            <img src="/market/adder_01.jpg">
+            <img src="/market/adder_02.jpg">
+            <img src="/market/adder_03.jpg">
+            <img src="/market/adder_04.jpg">
+            <img src="/market/adder_05.jpg">
+            <img src="/market/adder_06.jpg">
+            <img src="/market/adder_07.jpg">
+        </div>
+    </div>
+</div>
+<!----------------------------------------------카테고리-------------------------------------------------------------------->
+<div class="category">
+    <div class="category_section_01">
+        <ul class="category_section_box_01">
+            <li><img src="/market/camp.png"></li><li>텐트</li>       
+        </ul>   
+            <ul class="category_section_box02">
+                <li><img src="/market/bed.png"></li><li>침낭</li>       
+            </ul>
+                <ul class="category_section_box03">
+                    <li><img src="/market/chair.png"></li><li>의자</li>       
+                </ul>
+                    <ul class="category_section_box04">
+                        <li><img src="/market/lamp.png"></li><li>조명</li>       
+                    </ul>
+                        <ul class="category_section_box05">
+                            <li><img src="/market/bbq.png"></li><li>그릴</li>       
+                        </ul>   
+    </div>
+    <div class="category_section_02">
+        <ul class="category_section_box_01">
+            <li><img src="/market/kichen.png"></li><li>키친</li>       
+        </ul>   
+            <ul class="category_section_box02">
+                <li><img src="/market/seasonal.png"></li><li>계절용품</li>       
+            </ul>
+                <ul class="category_section_box03">
+                    <li><img src="/market/storage.png"></li><li>수납용품</li>       
+                </ul>
+                    <ul class="category_section_box04">
+                        <li><img src="/market/rv.png"></li><li>RV용품</li>       
+                    </ul>
+                        <ul class="category_section_box05">
+                            <li><img src="/market/accesories.png"></li><li>악세서리</li>	       
+                        </ul>   
+    </div>
+
+</div>
+<!------------------------------------------------상품리스트------------------------------------------------------------------------->
+<div class="salelist">
+
+</div>
+<!------------------------------------------------최근상품목록------------------------------------------------------------------------->
+<div class="recentlist">
+    <h1>최근등록된상품</h1>
+    <div class='objectlist'>
+	   	<ul class="object"th:each="att : ${list}">
+	     	<li class="object_img"><img th:src="'/market/personal/'+${att.m.title}+'/'+${att.a.fname}"></li>
+	    	<li class="object_title" th:text="${att.m.title}"> </li>
+	    	<li class="object_price" th:text="${att.m.price}"></li>
+	    </ul>
+	</div>
+</div>
+<div class="footer"><th:block th:include="@{/thymeleaf/user/Footer.html}"></th:block></div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.web.market.service.MarketMapper"> 
+		
+		
+		<insert id="addmarketform" parameterType="com.spring.web.market.vo.Market"><!-- 판매글 올리기 -->
+			INSERT INTO market(mnum,title,author,price,content,category,unum,region)
+		 VALUES(M_NUM_SEQ.NEXTVAL,#{title},#{author},#{price},#{content},#{category},#{unum},#{region})
+		</insert>
+		
+		
+		<update id="addmattach" parameterType="list"><!-- 첨부파일 붙이기 -->
+		INSERT INTO m_attach (manum,mnum,fname)
+				SELECT M_A_NUM_SEQ.NEXTVAL,t.* FROM
+				(
+					<foreach collection="list" item="mattach" separator="union all" >
+						 SELECT (SELECT MAX(mnum) FROM market WHERE unum=#{mattach.unum}) AS mnum, #{mattach.fname} FROM DUAL
+					</foreach>
+				) t
+		</update>
+
+		<select id="getform" resultType="map"> <!-- 최근 20개 리스트 뽑아오기 -->
+		SELECT rownum,mnum,title,price,fname FROM 
+		(SELECT m.mnum,m.title,m.price,a.fname FROM MARKET  m left outer join m_attach a on m.mnum = a.mnum order by mnum desc)  
+		where fname LIKE 'thumnail%' AND <![CDATA[rownum <= 20]]> 
+		</select>
+
+		<select id="purchase_list" resultType="map"> <!-- 처음 구매사이트에 리스트 뽑아오기 -->
+		SELECT rownum,mnum,title,price,fname,region FROM 
+		(SELECT m.mnum,m.title,m.price,m.region,a.fname FROM MARKET  m left outer join m_attach a on m.mnum = a.mnum order by mnum desc)  
+		where fname LIKE 'thumnail%' 
+		</select>
+		
+		<select id="deepinfo" parameterType="com.spring.web.market.vo.Market" resultType="map"> <!--상세검색로직 -->
+			 SELECT rownum,mnum,title,price,fname,region,category FROM 
+			(SELECT m.mnum,m.title,m.price,m.region,m.category,a.fname FROM MARKET  m left outer join m_attach a on m.mnum = a.mnum  order by mnum desc)  
+			where fname LIKE 'thumnail%' 
+		 	<if test="title !=null and title!=''  " >
+		 	AND title LIKE '%'||#{title}||'%'
+		 	</if>
+				  	<if test="category!=null and category!='' " >
+				 	AND category LIKE '%'||#{category}||'%'
+				 	</if>
+						 	<if test="title !=null and title!='' and category!=null and category!='' " >
+						 	AND title LIKE '%'||#{title}||'%'  AND category LIKE '%'||#{category}||'%' 
+						 	</if> 	
+		</select>
+		<select id="detail" resultType="map" parameterType="com.spring.web.market.vo.Market"> <!-- 상품 디테일 -->
+		SELECT * FROM market m left outer join m_attach a on m.mnum=a.mnum where m.mnum=#{mnum} order by manum asc 
+		</select> 
+</mapper>

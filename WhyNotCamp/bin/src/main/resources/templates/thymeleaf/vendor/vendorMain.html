@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>main</title>
+<style type="text/css">
+   body { font: system-ui; font-family: sans-serif; display: block; margin: auto; width:1500px;}
+   main {position:relative; width:86%; margin: 0 auto; height: 850px; padding-left: 50px;}
+   aside { width:300px; height:550px; float:left;} 
+   .bookingList , .questions {margin: 15px; margin-left: 15%; height: 250px;}
+   table {border: 1px #a39485 solid; font-size: .9em; box-shadow: 0 2px 5px rgba(0,0,0,.25); width: 70%;
+      border-collapse: collapse; border-radius: 5px; overflow: hidden; text-align: left;}
+   thead { font-weight: bold; color: #fff; background: #73685d;}
+   td, th { padding: .3em .2em; vertical-align: middle;text-align: center; background-clip: padding-box; scroll-snap-align: start;}
+   td {border-bottom: 1px solid #e5e5e5;}
+   a {text-decoration: none;}
+   .calbox {width: 25px;height: 25px;border-radius: 70%;overflow: hidden;display: inline-block;}
+   .conbox {vertical-align: 5px;padding-left: 3px;}
+   #calendar {height: 80%; padding: 10px;}
+   .fc-day-sun a { color: #CC3D3D; text-decoration: none;}
+   .fc-day-sat a { color: #487BE1; text-decoration: none;}
+   .fc-button-primary{background-color: #73685d;}
+</style>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js"></script>
+<script type="text/javascript">
+var colors = ['#6799FF','#C4B5DB','#6EE3F7']
+var event_list = []
+$.ajax({
+	url : 'get_booking',
+	method:'post',
+	success : function(data)	{
+		for (var i = 0; i < data.length; i++) {
+			console.log(data[i].SNAME)
+			event_list.push({
+ 					title : data[i].sname,
+ 					start : data[i].checkin,
+ 					end : data[i].checkout,
+ 					backgroundColor : colors[i%3],
+ 					borderColor : colors[i%3],
+ 					rendering : "background"
+ 				})
+		};
+		setTimeout(cal,1);
+	},
+	error : function(xhr,status,err){
+		alert('에러 뜸')
+	}
+});
+
+function cal() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+       initialView : 'dayGridMonth',
+       titleFormat : function(date) {
+           return date.date.year + '년 ' + (parseInt(date.date.month) + 1) + '월';
+        },
+        events : event_list,
+        selectable : false, // 달력 일자 드래그 설정가능
+        droppable : false,
+        editable : false,
+        nowIndicator: true, // 현재 시간 마크
+        locale: 'ko', // 한국어 설정
+		  });
+		  calendar.render();
+}
+</script>
+<body>
+ <th:block th:include="@{/thymeleaf/vendor/Header.html}"></th:block>
+<aside>
+	<table>
+		<thead>
+		<tr><th>Info</th></tr>
+		</thead>
+		<tr>
+			<td><img src="/img/캠핑 로고.jpg" style="width: 40px; height: 40px;"></td>
+		</tr>
+		<tr th:unless="${main}">
+			<td style = "text-align: left; color: gray;" >캠핑지 정보가 없습니다</td>
+		<tr>
+		<tbody th:if="${main}">
+			<tr>
+				<td style = "text-align: left;">업체명: [[${main.cname}]]</td>
+				<td style = "text-align: left; color: gray;" th:unless="${main}">캠핑지 정보가 없습니다</td>
+			</tr>
+			<tr>
+				<td style = "text-align: left;height:auto;word-break: break-all">주소: [[${main.address}]]</td>
+			</tr>
+			<tr>
+				<td style = "text-align: left;">phone: [[${main.phone}]]</td>
+			</tr>
+		</tbody>
+	</table>
+</aside>
+   <main>
+   		<div id="calendar">
+   		</div>
+</main>
+    <th:block th:include="@{/thymeleaf/vendor/Footer.html}"></th:block>
+</body>
+</html>

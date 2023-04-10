@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @keyframes slide {
+    0% {transform: translateY(0px);}
+    10% {transform: translateY(-70px);}
+    20% {transform: translateY(-120px);}
+    30% {transform: translateY(-180px);}
+    40% {transform: translateY(-230px);}
+    50% {transform: translateY(-280px);}
+    60% {transform: translateY(-330px);}
+    70% {transform: translateY(-380px);}
+    80% {transform: translateY(-430px);}
+    100% {transform: translateY(-480px);}
+    
+    
+  }
+header .main_header{ width: 100%; height: 150px; display: flex;  justify-content: space-between; background-color: white; color: black;}
+header .main_header .main_logo{display: flex; align-items: center; font-family:SaenggeoJincheon ; font-size: 40px;}
+header .main_header .main_logo a {display: flex; align-items: center; text-decoration: none; color: black;}
+header .main_header .main_logo img{width: 100px; height: 100px; margin-left: 40px;}
+
+header .main_header div.search {display: flex; align-items: center;  margin-right: 25%; }
+header .main_header div.search input{width: 300px; height: 30px; border: 2px solid black; border-radius: 100px; }
+header .main_header div.search{ width: 500px; height: 50px; overflow: hidden; margin-top: 50px;}
+header .main_header div.search ul.area{margin-left: 3%; list-style: none;  }
+header .main_header div.search ul.area li:first-child{margin-top: 500px;}
+header .main_header div.search ul.area li {margin-top: 30px; animation: slide 30s infinite;}
+header .main_header div.search ul.area li::before{content: 'HOT'; color: red; border: 1px solid rgb(255, 0, 0); font-size: 12px; padding: 3px; margin-right: 7px;}
+
+header .main_header div.information { width: 25%; height: 150px; margin-right: 5%; }
+header .main_header div.information ul.info_top{display:flex; }
+header .main_header div.information ul.info_top li{ list-style: none; margin-left: 10px;border-left: 1px solid black; padding-left: 10px; color: black;}
+header .main_header div.information ul.info_top li:first-child {border: 0px;}
+header .main_header div.information ul.info_top li a{text-decoration: none; color: black;}
+
+header .main_header div.information ul.info_btm li{ margin-left: 15px; list-style: none; display: inline-block;}
+header .main_header div.information ul.info_btm li a {display: flex; flex-direction: column; align-self: center; text-decoration: none; align-items: center; color: black;}
+header .main_header div.information ul.info_btm img{width: 40px;height: 40px;}
+/*-------------*/
+    </style>
+</head>
+<body>
+    <header>
+        <div class="main_header">
+            <div class="main_logo"><a href="/vendor/main"><img src="/img/캠핑 로고.jpg">캠핑어때</a></div>
+            <div class="information">
+                     <ul class="info_top">
+                     	<li th:if="${session.vid!=null}">[[${session.vid}]] 님</li>
+                        <li th:if="${session.vnum==null}"><a href="/vendor/login">로그인<a></a></li>
+                        <li th:unless="${session.vnum==null}"><a href="/logout">로그아웃<a></a></li>
+                     </ul>
+                     <ul class="info_btm">
+                     	<li th:if="${session.exist}"><a href="/vendor/detail"><img src="/img/Header/camp.png">캠핑지정보</a></li>
+                     	<li th:unless="${session.exist}"><a href="/vendor/reg"><img src="/img/Header/camp_plus.png" style="width: 45px;height: 45px;">캠핑지추가</a></li>
+                     	<li><a href="/vendor/myinfo"><img src="/img/Header/header_personal.png">개인정보</a></li>
+                     	<li><a href="/vendor/reservation"><img src="/img/Header/header-reservation.png">예약관리</a></li>
+					 </ul>
+                     
+                </div>
+        </div>
+        <hr>
+</body>
+</html>

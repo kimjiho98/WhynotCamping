@@ -1,0 +1,71 @@
+body{margin: 0;}
+@font-face {
+    font-family: dotum;
+    src: local('KoPubWorld돋움체 Regular'), url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldDotumMedium.woff2') format('woff2');}
+/*------------------------헤더-----------------------------------------*/
+@font-face {
+    font-family: 'KCC-eunyoung';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/KCC-eunyoung-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    } 
+      @font-face {
+        font-family: 'HancomUljuBangudae';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2205-2@1.0/HancomUljuBangudae.woff2') format('woff2');
+        font-weight: normal;
+        font-style: normal;
+    }
+.header{width: 100%; height: 150px; border: 1px solid black;}
+.header .header_1 {margin-left: 400px;}
+.header .header_1 img {width: 80px; margin-top: 40px;}
+.header .header_1 p {font-family: 'HancomUljuBangudae'; font-size: 50px; display: inline-block;margin-left: 30px; }
+/*------------------------메인------------------------------------------*/
+section div.main{width: 1000px; height: auto; border: 1px solid black; position: relative; left: 400px;  }
+@media screen and (max-width:1600px){section div.main{width:1000px; height: auto; border: 1px solid black; position: relative; left:200px; }}
+section div.main .sub_title{background-image: url("/img/sub_title.jpg"); width: 1000px; height: 100px; display: flex; justify-content: center; font-family: dotum; font-size: 40px; align-items: center; color: white; }
+section div.main .sub_text{display:flex; margin-top: 60px; justify-content: space-around;}
+section div.main .sub_text .register_1{ border: 2px solid black; font-size: 20px; width:250px; height: auto;  border-radius: 20px; display: flex; background-color:rgba(24, 52, 151); align-items: center; color: white;}
+section div.main .sub_text .register_1 .number_1{padding-left: 5px;border: 2px solid black; border-radius: 100px; position: relative; margin-left: 20px;margin-right: 5px; padding-right: 5px; background-color: white; color: black;}
+section div.main .sub_text .register_2{ border: 2px solid black; font-size: 20px; width:250px; height: auto; border-radius: 20px; display: flex;align-items: center;}
+section div.main .sub_text .register_2 .number_2{ padding-left: 5px; padding-right: 5px; border: 2px solid black; border-radius: 100px; position: relative; margin-left: 50px;margin-right: 5px; }
+section div.main .sub_text .register_3{  border: 2px solid black; font-size: 20px; width:250px; height: auto;  border-radius: 20px; display: flex;align-items: center;}
+section div.main .sub_text .register_3 .number_3{padding-left: 5px;border: 2px solid black; border-radius: 100px; position: relative; margin-left: 70px;margin-right: 5px; padding-right: 5px;}
+section .main .text_1 {position: relative ; left: 30px; font-size: 20px; font-family: dotum; margin-top: 50px;}
+section .main .agree_form .agree_1{width: 930px; height: 300px; border: 1px solid black; position: relative; left: 30px; overflow: auto; }
+section .main .text_2 {position: relative; left: 590px; font-size: 15px; margin-top: 20px;}
+section .main .text_2 input {width: 20px; height: 20px;  }
+section .main .text_3 {position: relative ; left: 30px; font-size: 20px; font-family: dotum; margin-top: 50px;}
+section .main .agree_form .agree_2{width: 930px; height: 300px; border: 1px solid black; position: relative; left: 30px; overflow: auto; }
+section .main .text_4 {position: relative; left: 470px; font-size: 15px; margin-top: 10px;margin-bottom: 20px;}
+section .main .text_4 input {width: 20px; height: 20px;}
+section .main .text_5{position: relative ; left: 260px; font-size: 20px; font-family: dotum; margin-top: 10px;}
+section .main .text_5 input {width: 20px; height: 20px; margin-right: 10px; }
+section .main .btn_1 {display: flex; justify-content: center; font-size: 30px; font-family:dotum ;margin-top: 20px;}
+section .main .btn_1 a{text-decoration: none; color: black;  border-radius: 20px; background-color:rgba(24, 52, 151); border: 1px solid black; display: block; width: 150px; position: relative; padding-left:80px; margin-top: 10px; color: white; margin-bottom: 20px;} 
+/*-----------------------------------------메인2------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+section .main .agree_form_2{position: absolute; top: 220px; display: none;}
+section .main .agree_form_2 .text_1 {position: relative ; left: 30px; font-size: 20px; font-family: dotum; margin-top: 10px;}
+section .main .agree_form_2 hr{width: 1000px;}
+section .main .agree_form_2 .reg_form {margin-top: 40px; width: 1000px; height:auto;  position: relative; left: 50px; display: block;}
+section .main .agree_form_2 .reg_form div{width: 900px; height: 70px; border: 1px solid rgba(221, 221, 221 ); display: flex; align-items: center;}
+section .main .agree_form_2 .reg_form div:first-child{border-top: 1px solid black;}
+section .main .agree_form_2 .reg_form div:first-child a button{cursor: pointer;}
+section .main .agree_form_2 .reg_form div:first-child span{font-size:12px; position: absolute; top:55px; left:150px;}
+section .main .agree_form_2 .reg_form div:nth-child(3) span{font-size:12px; position: absolute; top:195px; left:150px;}
+section .main .agree_form_2 .reg_form div:last-child{border: 0px;}
+section .main .agree_form_2 .reg_form div:nth-child(4) button{cursor: pointer;}
+section .main .agree_form_2 .reg_form i{width: 130px; height: 70px; background-color: rgba(240, 240, 240); display: flex; align-items: center; justify-content: center;}
+section .main .agree_form_2 .reg_form u input{width: 140px; height: 25px; margin-left: 20px;border: 1px solid rgba(221, 221, 221);}
+section .main .agree_form_2 .reg_form div:nth-child(8) input{width: 500px;}
+section .main .agree_form_2 .reg_form div a button{margin-left: 20px; width:100px ;height: 50px; background-color: gray; border: 0px; color: white;}
+section .main .agree_form_2 .reg_form div b {font-size: 12px; font-family: dotum; margin-left: 10px; color:dodgerblue;}
+section .main .btn_2 {display: flex; justify-content: center; font-size: 30px; font-family:dotum ;margin-top: 20px;}
+section .main .btn_2 a{text-decoration: none; color: black;  border-radius: 20px; background-color:rgba(24, 52, 151); border: 1px solid black; display: block; width: 150px; position: relative; padding-left:80px; margin-top: 10px; color: white; } 
+/*-----------------------------------------메인3------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+section .main .agree_form_3{position: absolute; top: 300px; display: none;}
+section .main .agree_form_3 hr{width: 1000px;}
+section .main .agree_form_3 .regform_3 {box-shadow: 5px 5px 5px 5px gray; border: 2px double black; width: 350px; height: 400px; margin-left: 320px; margin-top: 150px;  font-size: 20px; font-family: dotum;  }
+section .main .agree_form_3 .regform_3 div{display: flex; justify-content:  space-between;}
+section .main .agree_form_3 .regform_3 img{width: 150px;  margin-left: 100px; }
+section .main .agree_form_3 .regform_3 h3{margin-left: 20px; height: 1px;}
+section .main .agree_form_3 .regform_3 a{ display: flex; justify-content: center; margin-top: 100px; border: 1px solid black; width: 150px; height: 50px; align-items: center; margin-left: 100px; background-color:rgba(24, 52, 151); text-decoration: none; color: white;}

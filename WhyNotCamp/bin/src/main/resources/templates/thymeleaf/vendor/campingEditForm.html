@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CampingDetail</title>
+<style>
+
+@font-face {
+    font-family: 'Cafe24Oneprettynight';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Cafe24Oneprettynight.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body { font: system-ui; font-family: sans-serif; display: block; margin: auto; width:1500px; height:100%;}
+#middle{height:auto;  width:58% ; display: flex; justify-content :center; font-family: 'Cafe24Oneprettynight';  font-weight:bold; margin:auto;}
+main { display:inline-block; overflow:auto; width:600px;text-align:center; margin-top:40px;  margin-bottom:140px;}
+
+
+
+.list_facility li > div> img 
+{
+	width:35px;
+	height:35px;
+}	
+.list_facility 
+{
+	display:flex;
+	justify-content : center;
+}
+.list_facility li
+{
+	list-style: none; 
+    padding-left: 0px;
+    display: inline;
+    margin-right:auto;
+    text-align:center; 
+}	
+
+.campimg { 
+	width: 100px; height: 70px; object-fit: cover; border:10px double #e5e5e5; border-radius:0.8em;}
+
+
+.siteinfo{	
+	border-radius:0.6em;
+	margin:40px;
+	padding:10px;
+	font-size:20px;  
+	display: inline-block; 
+	background-color:#e5e5e5;
+	box-shadow: 10px 10px 10px #A5BEBC;
+			}   
+.camplabel{border-bottom:5px double #a39485; color:#73685d; line-height:60px;}			
+.infotitle{border-top:2px dotted #a39485; border-bottom:2px dotted #a39485; font-size:24px; width:auto; color:#73685d; margin-top:100px; margin-bottom:150px;}			
+
+#editc{border: 5px double #e5e5e5; border-radius:0.6em; padding:30px; width: 68%; margin:auto;}
+#editf{border: 5px double #e5e5e5; border-radius:0.6em; padding:30px; width: 50%; margin:auto;}
+
+</style>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2b61f9a26f0c00a855734ad47d35fdb8&libraries=services"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+$(function(){
+	   $('#editc').css('display','none');
+	   $('#editf').css('display','none');
+	   $('.edits').css('display','none');
+	   $('.editop').css('display','none');
+	   $('.sites').css('display','none');
+	   $('.editform').css('display','none');
+	   $('.dels').css('display','none');
+	   $('#addimgsform').css('display','none');
+	   $('.delbttn').css('display','none');
+	   $('#addsiteform').css('display','none');
+	   
+	   $('.sites').on('click', function() {
+		    var valueCheck = $('.sites:checked').val(); // 체크된 Radio 버튼의 값을 가져옵니다.
+		    $('.editform').css('display','none');
+		    $('#'+ valueCheck).css('display','');
+		});   
+	   $("input[type='file']").change(function(e){
+			
+		      $('#preview').empty();
+		
+		      var files = e.target.files;
+		      var arr =Array.prototype.slice.call(files);
+		      
+		      for(var i=0;i<files.length;i++){
+		        if(!checkExtension(files[i].name,files[i].size)){
+		          return false;
+		        }
+		      }     
+		      preview(arr);         
+		    });
+		    
+		    function checkExtension(fileName,fileSize){
+		
+		      var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
+		      var maxSize = 20971520;
+		      
+		      if(fileSize >= maxSize){
+		        alert('파일 사이즈 초과');
+		        $("input[type='file']").val("");
+		        return false;
+		      }
+		      
+		      if(regex.test(fileName)){
+		        alert('업로드 불가능한 파일이 있습니다.');
+		        $("input[type='file']").val("");
+		        return false;
+		      }
+		      return true;
+		    }
+		    
+		    function preview(arr){
+		      arr.forEach(function(f){
+		        
+		        var fileName = f.name;
+		        if(fileName.length > 10){
+		          fileName = fileName.substring(0,7)+"...";
+		        }
+		        
+		        var str = '<div style="display: inline-flex; padding: 10px;"><li style="list-style:none;">';
+		        str += '<span>'+fileName+'</span><br>';
+		        
+		        if(f.type.match('image.*')){
+		          var reader = new FileReader(); 
+		          reader.onload = function (e) {           
+		            str += '<img src="'+e.target.result+'" title="'+f.name+'" width=150 height=100 />';
+		            str += '</li></div>';
+		            $(str).appendTo('#preview');
+		          } 
+		          reader.readAsDataURL(f);
+		        }else{
+		          str += '<img src="/resources/img/fileImg.png" title="'+f.name+'" width=150 height=100 />';
+		          $(str).appendTo('#preview');
+		        }
+		      });
+		    }
+	});
+	
+//주소-좌표 변환 객체 생성
+var geocoder = new kakao.maps.services.Geocoder();
+
+//주소 검색창
+function find_address(){
+    new daum.Postcode({
+        oncomplete: function(data) {
+        	var addr = ''; // 주소 변수
+            var extraAddr = ''; // 참고항목 변수
+
+            //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+            if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                addr = data.roadAddress;
+            } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                addr = data.jibunAddress;
+            }
+
+            // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+            if(data.userSelectedType === 'R'){
+                // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                    extraAddr += data.bname;
+                }
+                // 건물명이 있고, 공동주택일 경우 추가한다.
+                if(data.buildingName !== '' && data.apartment === 'Y'){
+                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                if(extraAddr !== ''){
+                    extraAddr = ' (' + extraAddr + ')';
+                }
+            
+            }
+
+            // 주소 정보를 해당 필드에 넣는다.
+           
+            document.getElementById("address").value = addr;
+            
+           $("#address").prop("readonly",true);
+            var juso =  addr;
+        	geocoder.addressSearch(juso, callback);  
+        }
+    }).open();
+}
+// 주소 정보에 해당하는 좌표값을 요청 후 저
+var callback = function(result, status) {
+	if (status === kakao.maps.services.Status.OK) {
+	   var lng = $("#lng").val(result[0].x); 
+	   var lat = $("#lat").val(result[0].y);
+	}
+};
+
+
+	function editcon()
+	{
+		$('#editc').css('display','');
+		$('#editbtn').css('display','none');		
+	}
+	function editfaci()
+	{
+		$('#editf').css('display','');
+		$('#facilbtn').css('display','none');		
+	}
+	
+	function showbtn()
+	{
+		$('.editop').css('display','');
+		$('#showeditsite').css('display','none');		
+	}
+	
+	function showeditform()
+	{
+		$('.editop').css('display','none');
+		$('.sites').css('display','');
+		$('.edits').css('display','');
+	}
+	
+	function delform()
+	{
+		 $('.dels').css('display','');
+	}	
+	
+	function addimgform()
+	{
+		$('#addimgsform').css('display','');
+	}
+	function delbtnon()
+	{
+		 $('.delbttn').css('display','');
+	}
+	function addformon()
+	{
+		 $('#addsiteform').css('display','');
+	}
+	
+	function editCampingMain()
+	{
+		var serData = $('#editcamp').serialize();
+		alert(serData);		
+		
+		$.ajax({
+				url : '/vendor/editcampmain',	
+				method : 'post',
+				data : serData,  											
+				cache : false,		
+				dataType:'json',                      
+				success : function(res)                
+				{		
+					if(res.updated)
+					{						
+						alert(res.msg);
+						location.reload();
+					}
+					else
+					{
+						alert(res.msg);
+					}			
+				},
+				error : function(xhr,status,err)
+				{
+					alert(err);	
+				}
+				});			
+		
+		$('#editc').css('display','none');
+	}
+	
+	function editFacilities()
+	{
+		var serData = $('#editfac').serialize();
+		alert(serData);		
+		
+		$.ajax({
+				url : '/vendor/editfacilities',	
+				method : 'post',
+				data : serData,  											
+				cache : false,		
+				dataType:'json',                      
+				success : function(res)                
+				{		
+					if(res.updated)
+					{						
+						alert(res.msg);
+						location.reload();
+					}
+					else
+					{
+						alert(res.msg);
+					}				
+				},
+				error : function(xhr,status,err)
+				{
+					alert(err);	
+				}
+				});			
+		
+		$('#editf').css('display','none');
+	}
+	
+	
+	function editcampsite(snum)
+	{
+	
+		var serData = $('#'+snum).serialize();
+		alert(serData);		
+		
+		$.ajax({
+				url : '/vendor/editcampsite',	
+				method : 'post',
+				data : serData,  											
+				cache : false,		
+				dataType:'json',                      
+				success : function(res)                
+				{		
+					if(res.updated)
+					{						
+						alert(res.msg);
+						location.reload();
+					}
+					else
+					{
+						alert(res.msg);
+					}				
+				},
+				error : function(xhr,status,err)
+				{
+					alert(err);	
+				}
+				});			
+				
+	}
+	
+
+	function delcampsite(snum)
+	{	
+		var serData = $('#del'+snum).serialize();
+		
+		if(confirm('삭제하시겠습니까??'))
+		$.ajax({
+				url : '/vendor/delcampsite',	
+				method : 'post',
+				data : serData,  											
+				cache : false,		
+				dataType:'json',                      
+				success : function(res)                
+				{		
+					if(res.deleted)
+					{						
+						alert(res.msg);
+						location.reload();
+					}
+					else
+					{
+						alert(res.msg);
+					}				
+				},
+				error : function(xhr,status,err)
+				{
+					alert(err);	
+				}
+				});							
+	}
+	
+	function addonesite()
+	{
+		var data = $('#addsitespot').serialize();
+		
+		$.ajax({
+			url : '/vendor/addonesite',	
+			method : 'post',
+			data : data,  											
+			cache : false,		
+			dataType:'json',                      
+			success : function(res)                
+			{		
+				if(res.added)
+				{							
+					alert(res.msg);
+					location.reload();
+				}
+				else
+				{
+					alert(res.msg);
+				}				
+			},
+			error : function(xhr,status,err)
+			{
+				alert(err);	
+			}
+			});			
+	}
+	function delimg(anum,cnum)
+	{			
+		var cname = $('.imginfo'+anum+"[name=cname]").val();				
+		var fname = $('.imginfo'+anum+"[name=fname]").val();		
+		
+		var data = {};
+		data.cname = cname;
+		data.fname = fname;
+		data.anum = anum;
+		data.cnum = cnum;
+	
+		$.ajax({
+				url : '/vendor/delimg',	
+				method : 'post',
+				data : data,  											
+				cache : false,		
+				dataType:'json',                      
+				success : function(res)                
+				{		
+					if(res.deleted)
+					{							
+						location.reload();
+					}
+					else
+					{
+						alert(res.msg);
+					}				
+				},
+				error : function(xhr,status,err)
+				{
+					alert(err);	
+				}
+				});			
+	}	
+	
+	function addimage()
+	{
+		var form = $('#addimgsform')[0]
+	    var data = new FormData(form);
+		
+		$.ajax({
+				url : '/vendor/addimg',	
+				method : 'post',
+				enctype: 'multipart/form-data',
+				data : data,  											
+				cache : false,		
+				dataType:'json',        
+				processData: false,  
+			    contentType: false,
+				success : function(res)                
+				{									
+					alert(res.msg);
+					location.reload();
+									
+				},
+				error : function(xhr,status,err)
+				{
+					alert(err);	
+				}
+				});
+	}
+	
+
+
+
+</script>
+</head>
+<body>
+<th:block th:include="@{/thymeleaf/vendor/Header.html}"></th:block>
+	<div id='middle' style="border-left:6px double #73685d ; border-right:6px double #73685d ;">
+	 <main>	 	
+		<div style="font-size:70px; color:#73685d;  margin-top:50px; margin-bottom:80px;" th:text="${cmain.camp.cname}"></div>
+		<div style="margin-bottom:140px;">
+			<label class='infotitle'>　캠핑장정보　</label><p>	
+		
+			<div style="font-size:24px; margin:50px; border:5px double #e5e5e5; margin:60px; border-radius:0.6em; width:auto;">
+				<label class="camplabel">ADDRESS</label>　<span th:text="${cmain.camp.address}"></span><br>
+				<label class="camplabel">PHONE</label>　<span th:text="${cmain.camp.phone}"></span><br>
+				<label class="camplabel">INFO</label>　<span th:text="${cmain.camp.info}"></span>
+			</div>
+			
+			<button id='editbtn' type='button' onclick='editcon();'>수정</button>
+			<div id='editc'>
+				<form id='editcamp'>
+					<label class="camplabel">ADDRESS</label>　
+					<input type="text" size="40" name="address" id="address" class="essential">
+					<input type="hidden" id="lat" name="lat">
+					<input type="hidden" id="lng" name="lng">
+					<input type="button" onclick="find_address();" value="주소찾기">
+					<br>
+					<label class="camplabel">CHECKIN</label>　<input name="in_time" type="number" min="1" max="24" value="1"><br>
+					<label class="camplabel">CHECKOUT</label>　<input name="out_time" type="number" min="1" max="24" value="1"><br>
+					<label class="camplabel">PHONE</label>　<input type='text' name='phone' th:value="${cmain.camp.phone}"><p>
+					<label class="camplabel">INFO</label>　<textarea type='text' name='info' cols='40' rows='10'>[[${cmain.camp.info}]]</textarea><br>	
+					<button type='button' onclick="editCampingMain();">제출</button>			
+				</form>		
+			</div>
+			
+		</div>
+		
+		<label class='infotitle'>　시설정보　</label><p>	
+		<div style="border:5px double #e5e5e5 ; border-radius:0.6em; margin-top:40px;margin-bottom:50px;">	
+		<ul class="list_facility" style="padding:auto; ">
+		
+	    <li th:if="${cmain.fac.wifi == 1}">
+	    <div><img src="/img/wifi.jpeg"></div>
+	    <span class="color_g">WIFI</span></li>
+	     <li th:if="${cmain.fac.wifi == 0}">
+	    <div><img src="/img/no-wifi.jpeg"></div>
+	    <span class="color_g">WIFI불가</span></li>	    
+	    <li th:if="${cmain.fac.pet == 1}">
+	    <div> <img src="/img/animal.jpeg"></div>
+	    <span class="color_g">동물출입</span></li>
+	     <li th:if="${cmain.fac.pet == 0}" >
+	    <div><img src="/img/no-animal.jpeg"></div>
+	    <span class="color_g">동물출입불가</span>
+	    </li>	    
+	    <li th:if="${cmain.fac.cook == 1}">
+	    <div><img src="/img/cook.jpeg"></div>
+	    <span  class="color_g">취사</span></li>	    
+	    <li th:if="${cmain.fac.cook == 0}">
+	    <div><img src="/img/no-cook.jpeg"></div>
+	    <span class="color_g">취사불가</span></li>　	    
+	    <li th:if="${cmain.fac.bbq == 1}">
+	    <div><img src="/img/bbq.jpeg"></div>
+	    <span class="color_g">바베큐</span></li>
+	    <li th:if="${cmain.fac.bbq == 0}">
+	    <div><img src="/img/no-bbq.jpeg"></div>
+	    <span class="color_g">바베큐불가</span></li>	    
+	    <li  th:if="${cmain.fac.fire == 1}">
+	    <div ><img src="/img/fire.jpeg"></div>
+	    <span class="color_g">캠프파이어</span></li>
+	    <li th:if="${cmain.fac.fire == 0}">
+	    <div><img src="/img/no-fire.jpeg"></div>
+	    <span class="color_g">캠프파이어불가</span></li>    
+	    <li th:if="${cmain.fac.toilet == 1}">
+	    <div><img src="/img/toilet.jpeg"></div>
+	    <span class="color_g">화장실</span></li>
+	    <li  th:if="${cmain.fac.toilet == 0}">
+	    <div><img src="/img/no-toilet.jpeg"></div>
+	    <span class="color_g">화장실없음</span></li>	 	 
+	</ul>
+	</div>
+	
+	<button id='facilbtn' type='button' onclick='editfaci();' style="margin-bottom:120px">시설 정보 수정</button>		
+			<div id='editf' style='margin-bottom:100px;'>
+				<form id='editfac'>
+					<label class="camplabel">WIFI</label>　
+					<label><input type="radio" name="wifi" value="1">있음</label>
+					<label><input type="radio" name="wifi" value="0" checked="checked">없음</label><br>
+		
+					<label class="camplabel">PET</label>　
+					<label><input type="radio" name="pet" value="1">가능</label>
+					<label><input type="radio" name="pet" value="0" checked="checked">불가능</label><br>		
+										
+					<label class="camplabel">COOK</label>
+					<label><input type="radio" name="cook" value="1">가능</label>
+					<label><input type="radio" name="cook" value="0" checked="checked">불가능</label><br>
+					
+					<label class="camplabel">BBQ</label>
+					<label><input type="radio" name="bbq" value="1">있음</label>
+					<label><input type="radio" name="bbq" value="0" checked="checked">없음</label><br>
+					
+					<label class="camplabel">FIRE</label>
+					<label><input type="radio" name="fire" value="1">있음</label>
+					<label><input type="radio" name="fire" value="0" checked="checked">없음</label><br>
+					
+					<label class="camplabel">TOILET</label>
+					<label><input type="radio" name="toilet" value="1">있음</label>
+					<label><input type="radio" name="toilet" value="0" checked="checked">없음</label><p>
+		
+					<button type='button' onclick="editFacilities();">제출</button>			
+				</form>		
+			</div><p>
+		
+
+	<label class='infotitle'>　첨부사진　</label><p>	
+		
+	<div style="margin-top:50px; margin-bottom:200px;">	
+
+	<button id='addimgbtn' onclick='addimgform();'>사진추가</button>　
+	<button id='delimgbtn' onclick='delbtnon();'>사진삭제</button> <p>
+	캠핑장 배치도 <br>
+		<div th:if="${cmain.mapatt.fname!=null}">
+			<img class="campimg" th:src="@{'/camping/'+${cmain.camp.cname}+'/'+${cmain.mapatt.fname}}"><br>
+				<form th:class='imginfo+${cmain.mapatt.anum}'>
+					<input type='hidden' name='cname' id='cname' th:value='${cmain.camp.cname}'>
+					<input type='hidden' name='fname' id='fname' th:value='${cmain.mapatt.fname}'>				
+					<button type='button' class='delbttn' th:onclick='|delimg(${cmain.mapatt.anum},${cmain.camp.cnum});|'>Ｘ</button>
+				</form>		
+		</div>
+		<div th:unless="${cmain.mapatt.fname!=null}">
+			<span class="campimg" th:text="'배치도 사진이 없습니다.'" ><br>		
+		</div>						
+	<p>	
+	캠핑장 첨부사진<br>	
+		<div class='mySlides fade' style='margin:auto;' th:each="a : ${cmain.camp.attList}">
+			<div class="slide-img" style=' float:left;'  th:if="${a.fname!=null}" >
+				<img class="campimg" th:src="@{'/camping/'+${cmain.camp.cname}+'/'+${a.fname}}" >
+				<form class='imginfo+${a.anum}'>
+					<input type='hidden' name='cname' id='cname' th:value='${cmain.camp.cname}'>
+					<input type='hidden' name='fname' id='fname' th:value='${a.fname}'>							
+				<button type='button' class='delbttn' th:onclick='|delimg(${a.anum},${cmain.camp.cnum});|'>Ｘ</button>
+				</form>
+			</div>
+		</div>
+
+		<div th:unless="${cmain.camp.attList!=null}">
+			<span class="campimg" th:text="'첨부한 사진이 없습니다.'" ><br>		
+		</div>			
+	</div>	
+		
+		<form id='addimgsform' style='border:10px double  #e5e5e5; border-radius:0.6em; padding :20px'>
+			<input type='hidden' name='cnum' th:value='${cmain.camp.cnum}'>			
+			<input type='hidden' name='cname' th:value='${cmain.camp.cname}'>
+			캠핑장 정보 <input type="file" name="ifiles" id='ifiles' multiple="multiple"><br>
+			<div th:if="${cmain.mapatt.fname==null}">캠핑장 배치도 <input type="file" name="mapimg"></div><br>
+		<div id="preview"></div><p>
+		<button type='button' onclick='addimage();'>사진전송</button>		
+		</form> 
+		
+
+	<p>
+	<div style="margin-top:300px; margin-bottom:50px">
+		<label class='infotitle'>　사이트정보　</label><p>	
+	</div>		
+	
+	<button id='showeditsite' onclick='showbtn();'>사이트 정보수정</button>
+	<button id='esite' class='editop' onclick='showeditform();'>수정하기</button>
+	<button id='dsite' class='editop' onclick='delform();'>삭제하기</button>
+	<button id='asite' class='editop' onclick='addformon();'>추가하기</button><p>
+	
+	<div id='addsiteform'>
+		<form id='addsitespot'>
+				<input type='hidden' name='cnum' th:value="${cmain.camp.cnum}">		
+		 		<label>NAME : </label> <input name='sname' type='text' style="width:80px;"><br>
+			 	<label>PRICE : </label> <input name='price' type='number' style="width:70px;" step='1000' min='20000'><br>
+			 	<label>MAXPPL : </label> <input name='max_ppl' min='1' type='number' style="width:70px;"><br>
+			 	<button type='button' onclick='addonesite();'>사이트 추가</button>		
+		</form>
+	</div>
+	
+	
+	
+	
+	<div class="siteinfo" th:each="s , sStat : ${cmain.camp.siteList}" >		
+	 	<div>
+	 	<label style='font-size:23px;font-weight:bold; color: #73685d;'>[[${s.sname}]]</label> <br>
+	 	     PRICE : [[${s.price}]]원 <br> MAXPPL(최대인원) : [[${s.max_ppl}]] 명<br>  	
+	 	</div>	 	
+			
+	 	<div class='edits'>	 		
+		 	<input type="radio" class='sites' id='snum' name='snum' th:value='${s.snum}'><br>
+		 	<form th:id='${s.snum}' class='editform'>
+		 		<input name='snum' type='hidden' th:value='${s.snum}'>
+			 	<label>NAME : </label> <input name='sname' type='text' style="width:80px;" th:value='${s.sname}'><br>
+			 	<label>PRICE : </label> <input name='price' type='number' style="width:70px;" step='1000' min='20000' th:value='${s.price}'><br>
+			 	<label>MAXPPL : </label> <input name='max_ppl' type='number' style="width:70px;" th:value='${s.max_ppl}'><br>
+		 		<button type='button' th:onclick='|editcampsite(${s.snum});|'>수정</button>
+	 		</form>	 	
+	 	</div>	
+	 	
+	 	<div class='dels'>
+		 	<form th:id='del+${s.snum}'>
+		 		<input type='hidden' name='snum' th:value='${s.snum}'>
+			 	<button type='button' th:onclick='|delcampsite(${s.snum});|'>삭제</button>
+		 	</form>
+	 	</div>
+	 </div><p>
+		</main>
+	</div>	
+<th:block th:include="@{/thymeleaf/vendor/Footer.html}"></th:block>
+</body>
+</html>

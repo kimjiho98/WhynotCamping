@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.web.login.service.LoginMapper"> 
+
+	<!-- 유저 정보 찾아오기 -->
+	<select id="getUnumById"
+			parameterType="String"
+			resultType="com.spring.web.user.vo.User">
+	
+		SELECT UNUM,NICKNAME FROM USERS WHERE uuid=#{id}
+
+	</select>
+
+	<!-- 벤더 num 찾아오기 -->
+	<select id="getVnumById"
+			parameterType="String"
+			resultType="Integer">
+	
+		SELECT VNUM FROM VENDOR WHERE vid=#{id}
+
+	</select>
+
+	<!--  admin nickname 찾아오가 -->
+	<select id="getNicknameByAdnum"
+			parameterType="Integer"
+			resultType="String">
+	
+		SELECT NICKNAME FROM C_ADMIN WHERE ADNUM=#{adnum}
+		
+	</select>
+	
+	<!-- 리뷰작성 할 booking 체크 - 지환 -->
+	<select id="getCheckOut"
+			parameterType="Integer"
+			resultType="com.spring.web.vendor.vo.Booking">
+				
+		SELECT b.bnum FROM 
+		(SELECT * FROM BOOKING 
+		WHERE unum=#{unum} 
+		AND confirm=1 
+		AND <![CDATA[checkout+INTERVAL'14'DAY>=SYSDATE]]>) b 
+		LEFT OUTER JOIN REVIEW r 
+		ON b.bnum=r.bnum 
+		WHERE b.unum=#{unum} AND r.rnum IS NULL		
+			
+	</select>	
+	
+	<!-- 써야할 리뷰가 있을 때 알람테이블에 추가 -지환- -->
+	<insert id="addAlarmByReview"
+			parameterType="Integer">
+	
+		INSERT INTO ALARM(ALNUM,UNUM,AVSR) 
+		VALUES(ALARM_SEQ.NEXTVAL,#{unum},2)
+	
+	</insert>
+
+</mapper>

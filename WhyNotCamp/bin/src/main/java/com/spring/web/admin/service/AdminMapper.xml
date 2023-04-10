@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.web.admin.service.AdminMapper">
+
+
+	<!-- adnum로 admin객체 불러오기 -->
+	<select id="getPwdByAdnum" 
+			parameterType="Integer" 
+			resultType="com.spring.web.admin.vo.Admin">
+		SELECT * FROM C_ADMIN WHERE adnum=#{adnum}
+	</select>
+	
+	
+	<select id="getUserInfo"
+			parameterType="String"
+			resultType="com.spring.web.user.vo.User">
+			
+		SELECT * FROM USERS WHERE uuid=#{uid}	
+			
+	</select>
+	
+
+	<select id="findBooking"
+			parameterType="hashmap"
+			resultType="com.spring.web.vendor.vo.Booking">
+			
+			SELECT * FROM BOOKING WHERE UNUM=
+			(SELECT UNUM FROM USERS WHERE UUID=#{uid})
+			AND TO_CHAR(REGDATE,'YYYY-MM-dd')=TO_CHAR(#{regdate},'YYYY-MM-dd')
+			
+	</select>
+	
+	<select id="getVendorInfo"
+			parameterType="String"
+			resultType="com.spring.web.vendor.vo.Vendor">
+			
+		SELECT * FROM VENDOR WHERE vid=#{vid}	
+			
+	</select>
+	
+	<select id="getCampByVid"
+			parameterType="hashmap"
+			resultType="com.spring.web.vendor.vo.CampingMain">			
+						
+			SELECT * FROM CAMPING_MAIN 
+			WHERE VNUM=(SELECT VNUM FROM VENDOR WHERE VID=#{vid})		
+			AND cname=#{cname}
+	</select>
+	
+			
+
+</mapper>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Write_Question</title>
+<style>
+@font-face {
+    font-family: 'Cafe24Oneprettynight';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Cafe24Oneprettynight.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+ body{ font-family: 'Cafe24Oneprettynight';}
+
+</style>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+
+function addQuestion()
+{			
+	var serData = $('#contents').serialize();
+	alert('???'+serData);
+	
+	$.ajax({
+			url : '/userinfo/addquestion',	
+			method : 'post',
+			data : serData,  											
+			cache : false,		
+			dataType:'json',                      
+			success : function(res)                
+			{		
+				if(res.added)
+				{						
+					alert(res.msg);
+					location.href='/userinfo/myqalist';
+				}
+				else
+				{
+					alert(res.msg);
+				}
+			},
+			error : function(xhr,status,err)
+			{
+				alert(err);	
+			}
+			});		
+ }
+
+</script>
+</head>
+<body>
+ <th:block th:include="@{/thymeleaf/user/Header.html}"></th:block>
+ <div id='content'>
+ <div id='reviewform' style='margin:auto; color:#162A61; border:15px double #165861; border-radius:0.5em; font-size:30px; margin-top:100px; margin-bottom:100px;text-align:center; width:50%; padding-top:30px; padding-bottom:30px;'>	
+<span style='font-size:40px; font-weight:bold; '> [[${cname}]]</span><p>	
+	<form id='contents'>
+		<input type='hidden' name='unum' th:value='${session.unum}'>
+		<input type='hidden' name='nickname' th:value='${session.nickname}'>
+		<input type='hidden' name='cnum' th:value='${cnum}'>
+		<label>질문내용</label><p>
+		<textarea type='text' name='question' placeholder='질문 내용을 입력하세요.' cols='80' rows='30'></textarea> <br>
+		<button type='button' onclick='addQuestion();'>질문 제출</button>
+		 
+	</form>
+
+</div><p>
+</div>
+<th:block th:include="@{/thymeleaf/user/Footer.html}"></th:block>
+</body>
+</html>

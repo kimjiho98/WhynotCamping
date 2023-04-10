@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>캠핑어때</title>
+<link rel="stylesheet" href="/css/map.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="/js/search.js"></script>
+
+</head>
+<body>
+<th:block th:include="@{/thymeleaf/user/Header.html}"></th:block>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=04c7b516131dc02e78c4c758450adf2e"></script>
+<div id='container'>
+<div id="recommend_box" th:if="${session.nickname!=null}">
+	<h1>[[${session.nickname}]]이 좋아할 만한 캠핑장 추천</h1>
+	<p>
+	<div class="recommend_list" th:each="r,rStat : ${recommendList}">
+		<a th:href="@{'/search/camp?keyword='+${r.cname}}">
+			<ul>
+				<li><span th:text="'추천 '+${rStat.index+1}+'순위'" style="color:red;"></span> <span class="recommend_title"th:text="${r.cname}"></span> </li>
+				<li><span th:text="${r.address}"></span></li>
+				<li><span th:text="${r.phone}"></span></li>	
+			</ul>
+		</a>
+	</div>
+</div>
+<div id="map" style="width:100%;height:700px;"></div><!-- 지도를 표시할 div-->
+</div>
+
+<div id="map-container" style="display:none;">
+<div id="map-placeholder" >
+	<div class="search-form">
+	   <form action="/search/camp" method="get" id="_layout_search_border_" onsubmit="return mainsearchCheck(this);">
+	      <div class="row">
+	         <input autocomplete="off"  type="text" id="totalsearch" name="keyword" maxlength="14" placeholder="검색결과가 없습니다" onfocus="this.placeholder = ''" onblur="this.placeholder ='키워드 검색'" 
+	         class="search_input keyword " value="" />
+	         
+	         <a href="javascript:;" class="keyword_del"><img src="/img/cross-out.svg" width="26px" height="26px"/></a>
+	            <button type="submit" class="btn_search">
+	                 <i class="fa fa-search" aria-hidden="true"></i>
+	              </button>
+	      </div>
+	   </form>   
+	</div>
+</div>
+</div>
+
+
+<script>
+// 화면에 따른 동적인 지도 높이
+var mapContainer = document.getElementById('map');
+
+mapContainer.style.height = window.innerHeight + 'px';
+
+window.addEventListener('resize', function() {
+    mapContainer.style.height = window.innerHeight -155 + 'px';
+});
+
+
+	var str = '[[${list}]]';
+	if(str=='[]')
+		{
+		  document.getElementById('map').style.display='none';
+		  document.getElementById('map-container').style.display='block';
+		  
+		}
+	if(str!='[]'){
+	var str1= str.replaceAll("&#39;", "\"");
+	var jsList = JSON.parse(str1);
+	
+	var mapContainer = document.getElementById('map'),  
+	    mapOption = {
+	        center: new kakao.maps.LatLng(jsList[0].LAT, jsList[0].LNG), // 지도의 중심좌표
+	        level: 7, // 지도의 확대 레벨
+	    }; 
+	}
+	// 지도를 생성한다 
+	var map = new kakao.maps.Map(mapContainer, mapOption); 
+	
+	// 지도 타입 변경 컨트롤을 생성한다
+	var mapTypeControl = new kakao.maps.MapTypeControl();
+
+	// 지도의 상단 우측에 지도 타입 변경 컨트롤을 추가한다
+	map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);	
+	
+	allOverlays = [];
+	
+	for(var i=0;i<jsList.length;i++)
+	{
+			// 마커 이미지 불러오기
+		var imageSize = new kakao.maps.Size(24, 35);  
+		var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; 
+	    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);    
+				
+		// 마커를 생성합니다
+	 	var marker = new kakao.maps.Marker({
+	 	     map: map, // 마커를 표시할 지도
+	 	     position: new kakao.maps.LatLng(jsList[i].LAT, jsList[i].LNG), // 마커의 위치
+			 image : markerImage // 마커 이미지
+	 	    });
+			 
+		var title = '<div class="list_title">'+jsList[i].CNAME+'</div>';
+		
+		// 클릭했을 때 뜰 오버레이 생성
+		var overlay = new kakao.maps.CustomOverlay({
+					position: marker.getPosition(),
+					clickable:true
+					});
+       
+		// 여러개의 오버레이를 다루기 위해서는 htmlElement를 이용해야한다.
+        var placeContent = document.createElement("div")
+        placeContent.className = "wrap"
+
+       	var placeInfo= document.createElement("div")
+        placeInfo.className = "info"
+	    
+       	var placeTitle = document.createElement("div")
+        placeTitle.className = "title"
+        placeTitle.appendChild(document.createTextNode(jsList[i].CNAME))
+        
+        // 오버레이를 닫을 수 있는 버튼 생성
+       	var closeBtn = document.createElement("button");
+        closeBtn.className = "close"
+        closeBtn.onclick = whenyouclose(overlay);
+        
+        var placeBody = document.createElement("div")
+        placeBody.className = "body"
+        
+       	var placeDesc = document.createElement("div")
+        placeDesc.className = "desc"
+
+        var placeAddress = document.createElement("div")
+        placeAddress.className = "ellipsis"
+        placeAddress.innerHTML = jsList[i].ADDRESS
+
+        var placePhone = document.createElement("div")
+        placePhone.className = "jibun"
+        placePhone.innerHTML = jsList[i].PHONE
+
+        // 상세보기 url
+        var placeUrl = document.createElement("div")
+        placeUrl.className = "url"
+        placeUrl.innerHTML = '<a href="/search/detail/'+jsList[i].CNUM+'" target="_blank" class="link">상세보기</a>'
+
+        // 요소들 구성(배치) 설정
+        placeContent.append(placeInfo)
+        placeInfo.append(placeTitle, placeBody)
+        placeTitle.append(closeBtn)
+        placeBody.append(placeDesc)
+        placeDesc.append(
+        	placeAddress,
+        	placePhone,
+        	placeUrl
+        )
+        
+        overlay.setContent(placeContent)	// 오버레이에 내용넣기
+    	allOverlays.push(overlay);	// 오버레이들을 배열에 저장
+    
+		 
+ 		//마커 위에 커스텀오버레이를 표시합니다
+	  	//마커를 중심으로 커스텀 오버레이를 표시하기위해 CSS를 이용해 위치를 설정했습니다
+ 	 	var overlays = new kakao.maps.CustomOverlay({
+	  	  	content:title,
+	  	    position: marker.getPosition(),
+	  	    xAnchor:-0.1,
+	  	 	yAnchor:2	// 마커에서 살짝 위에 위치하도록 설정
+  			});
+        
+	    // 이벤트 리스너로는 클로저를 만들어 등록합니다 
+	    // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+	    kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map,overlays));
+	    kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(overlays));
+	    kakao.maps.event.addListener(marker, "click", whenyouclick(map, overlay));
+	    
+	 }
+	
+	
+	//-----------------마커 이벤트------------------------------------
+	
+	// 마커를 클릭했을때 해당 오버레이를 열어주는 함수
+	function whenyouclick(map,overlay) {
+	    return function() {
+	    	closeAll();
+	    	 overlay.setMap(map);
+	    };
+	}
+	
+	// 닫기 버튼을 클릭했을때 해당 오버레이를 닫아주는 함수
+	function whenyouclose(overlay) {
+	    return function() {
+	    	 overlay.setMap(null);
+	    };
+	}
+	
+	// 마우스 오버레이 만드는 함수 
+	function makeOverListener(map,overlay) {
+	    return function() {
+	        overlay.setMap(map);
+	    };
+	}
+	
+	// 오버레이 클로저를 만드는 함수 
+	function makeOutListener(overlay) {
+	    return function() {
+	    	overlay.setMap(null); 
+	    };
+	}
+	
+	// 다른 마커를 클릭했을때 전에 있던 오버레이를 닫는 함수
+	function closeAll()
+	{
+		for(var i=0;i<allOverlays.length;i++)
+		{
+			allOverlays[i].setMap(null);
+		}
+	}
+</script>
+</body>
+</html>

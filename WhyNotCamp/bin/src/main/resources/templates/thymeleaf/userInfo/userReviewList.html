@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>MY REVIEW</title>
+<link rel="stylesheet" href='/css/linknavi.css'>
+<style>
+@font-face {
+    font-family: 'GangwonEdu_OTFBoldA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@media(max-width: 400px){
+body{
+    margin : 0 ;
+}
+}
+.container{	
+	height:100vh;	
+	width:100%;
+	display:inline-flex;
+	font-family: 'GangwonEdu_OTFBoldA';
+    font-size: 19px;	   
+	overflow-x:auto;
+}
+
+.content{	
+	border-left: 5px double gray;
+	width:1100px;	
+	text-align: center;	
+	white-space: nowrap;
+}
+
+.content>.info{	
+	line-height: 30px;	
+	margin:auto;
+	padding-left:100px;
+}
+
+
+h1{
+	font-weight:bold;
+	color:rgb(55, 78, 116);
+	text-align:center;
+	width:1050px;
+}
+
+.info>span{
+	 border-bottom: 2px solid rgb(155, 160, 168) ;	
+	 width:50%
+}
+.header{width:100%;height:150px;}
+ul,li{list-style:none;}
+
+.info>label{
+	border-bottom: 5px double rgb(55, 78, 116) ;
+	width: 30%;
+	float:center;
+}
+
+details summary::marker{font-size:0;}
+summary{ padding:5px; background-color: #040212; text-align:left; 
+		 border-top: 5px double gray; border-left: 5px double gray;border-right: 5px double gray;
+		 border-bottom:0.5px solid gray; border-radius: 0.2em; margin-top:15px ;padding-left:20px; width:700px; margin-left:90px;}
+
+.rdetail{margin-left:90px; text-align : left; padding:20px; border:5px double gray; font-size: 18px; background-color: white;width:685px;}
+.rdetail>label{ border-bottom : 2px dotted gray;}
+
+.sumlabel{border-bottom:5px double gray; color:white;}
+.sumspan{padding-right:20px; color:#D2FCF4;}
+
+.star {
+  position: relative;
+  font-size: 1em;
+  color: #ddd;
+}
+.star span {
+  position: absolute; 
+  left: 0;
+  color:gold;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+</style>
+</head>
+<body>
+ <th:block th:include="@{/thymeleaf/user/Header.html}"></th:block>
+
+
+<div class='container'>
+
+	<div class='navi' th:include="@{/fragments/naviMyinfo.html}"></div>
+
+	<div class='content'>
+		
+		<h1> My ReviewList</h1>
+		
+		<div class='info' th:each=" l : ${list}">	
+		<details>		
+			<summary>			
+				<label class='sumlabel'>캠핑장명 </label>　<span class='sumspan' th:text="${l.cname}"></span>
+				<label class='sumlabel'>작성일 </label>　<span class='sumspan' th:text="${l.review.regDate}"></span>
+				<label class='sumlabel'>별점 </label>　
+				<span class="star">★★★★★
+						<span th:style="'width:'+${(l.review.score)*20}+'%;'">★★★★★</span>
+				</span>				
+			</summary>			
+			<div class='rdetail'>
+				<label>CHECK-IN </label>　<span th:text="${l.booking.checkin}"></span>　
+				<label>CHECK-OUT </label>　<span th:text="${l.booking.checkout}"></span><br>
+				<label>REVIEW </label>　<span th:text="${l.review.content}"></span><p>
+				<div id="detail_imgt_pop" style="display:none;">
+			   <span id="pop_close"><img src="/img/btn/btn_close.png" /></span>
+			   <img src="/img/contents/basic_image.jpg" alt="" id="detail_img" />
+			</div>
+				<span th:each="r : ${l.review.attList}">
+					<img  th:src="@{'/review/'+${r.bnum}+'/'+${r.fname}}" style="width:100px; height:100px; border:3px dotted;" onclick="window.open(this.src)" >	
+				</span>
+			</div>	
+		</details>
+		</div>
+	</div>
+</div>
+ <th:block th:include="@{/thymeleaf/user/Footer.html}"></th:block>
+</body>
+</html>

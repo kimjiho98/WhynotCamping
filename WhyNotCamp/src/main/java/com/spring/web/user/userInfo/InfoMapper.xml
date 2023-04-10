@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.web.user.userInfo.InfoMapper"> 
+
+	<!-- 0. 유저정보 보기  - 지환 -->
+	<select id='getMyInfo'
+			parameterType='integer'
+			resultType='com.spring.web.user.vo.User'>
+			
+			SELECT * FROM USERS WHERE UNUM=#{unum}		
+					
+	</select>
+	
+	<!-- 1-1. 유저비밀번호 확인  - 지환 -->
+	<select id='userPwdCheck'
+			parameterType='Integer'
+			resultType='com.spring.web.user.vo.User'>
+						
+		SELECT UNUM,PWD FROM USERS WHERE UNUM=#{unum}				
+			
+	</select>
+	
+	<!-- 1-2. 유저비밀번호 수정   - 지환 -->
+	<update id='pwdUpdated'
+			parameterType='com.spring.web.user.vo.User'>
+						
+		UPDATE USERS SET PWD=#{pwd}
+		WHERE UNUM=#{unum}	
+			
+	</update>
+	
+	
+	<!-- 1-2. Camp_User 테이블의 암호화 수정 - 지환-->
+	<update id='pwdUpdatedToCampUser'
+			parameterType='com.spring.web.user.vo.User'>
+						
+		UPDATE CAMP_USER SET PASSWORD=#{pwd}
+		WHERE USERNAME=#{uuid}	
+			
+	</update>
+	
+	
+	
+	<!-- 1-3. 유저메일 수정   - 지환 -->
+	<update id='emailUpdate'
+			parameterType='com.spring.web.user.vo.User'>
+						
+		UPDATE USERS SET email=#{email}
+		WHERE UNUM=#{unum}	
+			
+	</update>
+	
+	<!-- 1-3. 유저 연락처 주소 수정   - 지환 -->
+	<update id='updatePA'
+			parameterType='com.spring.web.user.vo.User'>
+						
+		UPDATE USERS SET ADDRESS=#{address},PHONE=#{phone}
+		WHERE UNUM=#{unum}	
+			
+	</update>
+	
+	
+	<!-- 1-4. 회원탈퇴 -지환- -->
+	<update id='byeUser'
+			parameterType='com.spring.web.user.vo.User'>
+						
+		UPDATE CAMP_USER SET ENABLED=n
+		WHERE username=#{username}
+			
+	</update>
+	
+	
+	<!-- 2. 유저가 예약한 캠핑장 리스트 - 지환  -->
+	<select id="bookingList"
+			parameterType="integer"
+			resultType="map">
+		
+		SELECT b.bnum NUM,b.regdate,b.name,b.phone,b.checkin,b.checkout,b.unum,b.ttlprice,b.ppl,c.cname,b.confirm,c.cnum,b.snum
+		FROM BOOKING b INNER JOIN CAMPING_MAIN c ON b.cnum=c.cnum
+		WHERE b.unum=#{unum} 
+		ORDER BY b.regdate DESC
+	</select>
+	
+	
+	<!-- 3.cnum으로 캠핑장정보 가져오기 - 지환 -->
+	
+	<select id='getCamp'
+			parameterType='integer'
+			resultType='com.spring.web.vendor.vo.CampingMain'>
+		
+		SELECT * FROM CAMPING_MAIN WHERE cnum=#{cnum}
+		 	
+	</select>	
+	
+	
+	<!-- 4-1. 알람정보 체크하기 - 지환  -->
+	
+	<select id='alarmCheck'
+			parameterType='integer'
+			resultType='com.spring.web.user.vo.Alarm'>
+		
+		SELECT * FROM ALARM WHERE unum=#{unum}
+			 	
+	</select>		
+	
+	
+	<!-- 리뷰정보 가져오기 -->
+	<select id='reviewByBnum'
+			parameterType='integer'
+			resultType='com.spring.web.user.vo.Review'>
+	
+		SELECT * FROM REVIEW WHERE bnum=#{bnum}		
+			
+	</select>
+	
+	<!-- 4-1-2 알람삭제 -->
+	<delete id="deleteAlarm"
+			parameterType='com.spring.web.user.vo.Alarm'>
+			
+		DELETE FROM ALARM WHERE UNUM=#{unum} AND ALNUM=#{alnum}		
+			
+	</delete>
+	
+	
+	
+	
+	<!-- 4-2. 유저가 간 곳 리뷰 작성  - 지환 -->
+	<insert id="addReview"
+			parameterType='com.spring.web.user.vo.Review'>
+	
+		INSERT INTO REVIEW(rnum,cnum,unum,content,score,nickname,bnum,regdate) 
+		VALUES(REVIEW_SEQ.NEXTVAL,#{cnum},#{unum},#{content},#{score},#{nickname},#{bnum},SYSDATE)
+		
+	</insert>
+	
+	
+	<!-- 4-3 리뷰첨부파일 등록 -->
+	<update id="addratt" parameterType="list">           <!-- 위에서 셀렉트 된 값을 인서트 하겠다는 뜻. select all을 쓰면 시퀀스값이 올라가지않아. -->
+       INSERT INTO R_ATTACH (ranum, rnum, unum, cnum, bnum, fname)
+       SELECT REVIEW_SEQ.NEXTVAL AS ranum, t.* FROM
+       (
+           <foreach collection="list" item="item" index="index" separator="union all">
+                SELECT (SELECT MAX(rnum) FROM REVIEW) AS rnum, #{item.unum}, #{item.cnum}, #{item.bnum},#{item.fname} FROM DUAL
+           </foreach>
+       )t
+   </update>   	
+		
+		
+	<!-- 5. 유저가 작성한 리뷰들 목록 호출 - 지환 -->
+	<select id='myreviewList'
+			parameterType='integer'
+			resultType='map'>			
+
+			SELECT regdate,cname,nickname,checkin,checkout,content,score,bnum,rnum,unum,LISTAGG(FNAME,',')
+			WITHIN GROUP (ORDER BY FNAME)AS FNAME
+			FROM R_LIST WHERE unum=#{unum}
+			GROUP BY  regdate,cname,nickname,checkin,checkout,content,score,bnum,rnum,unum
+			ORDER BY REGDATE DESC
+			
+	</select>		
+	
+	
+	<!-- 6-1) Question 작성 - 지환 -->
+	<insert id="addQuestion"
+			parameterType='com.spring.web.user.vo.Review'>
+	
+		INSERT INTO QUESTION(qnum,cnum,unum,question,nickname,qregdate) 
+		VALUES(QUESTION_SEQ.NEXTVAL,#{cnum},#{unum},#{question},#{nickname},SYSDATE)
+		
+	</insert><!--# qnum sequence로 고치기 -->
+	
+	
+	
+	<!-- 6-2) 유저가 작성한 Q&A보기 - 지환 -->
+	<select id='myqaList'
+			parameterType='integer'
+			resultType='map'>
+			
+		SELECT q.qnum,q.unum,q.cnum,q.question,q.qregdate,c.cname,a.asnum,a.answer,a.aregdate
+		FROM QUESTION q 
+		LEFT OUTER JOIN CAMPING_MAIN c
+		ON q.cnum=c.cnum
+		LEFT OUTER JOIN ANSWER a 
+		ON q.qnum=a.qnum
+		WHERE unum=#{unum}	
+		ORDER BY q.QREGDATE DESC
+			
+	</select>
+	
+</mapper>

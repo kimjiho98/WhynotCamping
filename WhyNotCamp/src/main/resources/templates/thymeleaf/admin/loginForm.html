@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ADMIN LOGIN</title>
+<script src="https://code.jquery.com/jquery-3.6.2.js" integrity="sha256-pkn2CUZmheSeyssYw3vMp1+xyub4m+e+QK4sQskvuo4=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+function login()
+{
+	var ser = $('#loginForm').serialize();
+	$.ajax({
+ 		url : '/doLogin',
+ 		method:'post',
+ 		data : ser,
+ 		dataType : 'json',
+ 		success : function(res)	{
+ 		
+ 				location.href='/admin/main';
+ 
+ 		},
+ 		error : function(xhr,status,err){
+ 			alert(err);
+ 		}
+ 	});
+}
+</script>
+
+</head>
+<body>
+
+<div style="width:280px; height:250px; margin:auto; margin-top:150px; border:5px double silver; padding-left:50px; border-radius:0.8em;">
+
+	<div style="margin-bottom:50px;">
+		<h1>관리자 로그인 페이지</h1>
+	</div>
+
+  	<form id="loginForm">
+	    <div style="margin-bottom:20px;"><span>사번 : </span><input type="text" name="id" placeholder="사번을 입력해주세요"></div>
+	    <div style="margin-bottom:50px;"><span>비밀번호 : </span><input type="password" name="pw" placeholder="비밀번호를 입력해주세요" 
+	    	onkeypress="javascript:if(event.keyCode == 13){login();}"></div>
+	    <div onclick="login();" style="float:right; padding-right:140px;"><button>로그인</button></div>
+    </form>
+</div>
+
+</body>
+</html>

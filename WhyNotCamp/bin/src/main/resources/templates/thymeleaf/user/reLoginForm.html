@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href='/css/reloginForm.css'>
+<script src="/js/reloginForm.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+	function userlogin()
+	{
+		var Data = $('#userForm').serialize();
+		
+		$.ajax({
+				url : '/doLogin',	//주소확인할것
+				method : 'post',	//맵핑확인할것
+				data : Data,  											
+				cache : false,		
+				dataType:'json',                      
+				success : function(res)                
+				{		
+					if(res.confirm) //함수에 넣어준값 확인할것
+					{						
+						location.href="/user/main"; //성공시 주소(redirect?넣은 url? 확인바람)
+					}
+					else
+					{
+						alert(res.msg); //실패시 메세지만.
+					}
+				},
+				error : function(xhr,status,err)
+				{
+					alert(err);	
+				}
+				});		
+	}
+	
+	function vendorlogin()
+	{
+		var Data = $('#vendorForm').serialize();
+		
+		$.ajax({
+				url : '/doLogin',	//주소확인할것
+				method : 'post',	//맵핑확인할것
+				data : Data,  											
+				cache : false,		
+				dataType:'json',  
+				success : function(res)                
+				{		
+					if(res.confirm) //함수에 넣어준값 확인할것
+					{
+						setTimeout(location.href="/vendor/main",1000)
+					}
+					else
+					{
+						alert('실패 돌아감'); //실패시 메세지만.
+					}
+				},
+				error : function(xhr,status,err)
+				{
+					alert('에러 돌아감')
+				}
+				});		
+	}
+</script>
+<title>LOGINFORM</title>
+</head>
+<body>
+
+  <div class="cotn_principal">
+    <div class="cont_centrar">    
+      <div class="cont_login">
+  		  <div class="cont_info_log_sign_up">
+          		<div class="col_md_login">
+   					 <div class="cont_ba_opcitiy">            
+          				  <h2 style="color:#6395ae">UserLogin</h2>  
+  						    <p>일반사용자 로그인</p> 
+     							 <button class="btn_login" onclick="cambiar_login()">LOGIN</button>
+      				</div>
+      			</div>
+		    <div class="col_md_sign_up">
+		    <div class="cont_ba_opcitiy">
+
+		      <h2  style="color: #2E5D6B;">VendorLogin</h2>
+		      <p>캠핑장관리자 로그인</p>
+    
+		      <button class="btn_sign_up" onclick="cambiar_sign_up()">LOGIN</button>
+		    </div>
+      		</div>
+          </div>    
+        
+        <div class="cont_back_info">
+           <div class="cont_img_back_grey">
+           <img src="https://images.unsplash.com/42/U7Fc1sy5SCUDIu4tlJY3_NY_by_PhilippHenzler_philmotion.de.jpg?ixlib=rb-0.3.5&q=50&fm=jpg&crop=entropy&s=7686972873678f32efaf2cd79671673d" alt="" />
+           </div>        <!--클릭시배경-->
+        </div>
+	    <div class="cont_forms" >
+	        <div class="cont_img_back_">
+           		<img src="https://images.unsplash.com/42/U7Fc1sy5SCUDIu4tlJY3_NY_by_PhilippHenzler_philmotion.de.jpg?ixlib=rb-0.3.5&q=50&fm=jpg&crop=entropy&s=7686972873678f32efaf2cd79671673d" alt="" />
+           </div>   <!--클릭시배경-->
+
+
+
+		    <div class="cont_form_login" >
+		   <a href="#" onclick="ocultar_login_sign_up()" ><i class="material-icons">뒤로</i></a>
+		      <h2>LOGIN</h2>
+			       <form id='userForm'>
+				     <input type="text" name="id" placeholder="ID를 입력하세요" />
+				     <input type="password" name="pw"  placeholder="Password를 입력하세요" 
+				     onkeypress="if(event.keyCode==13) javascript:userlogin();"/>
+				     <button class="btn_login" type="button" onclick="userlogin();">LOGIN</button>
+			       </form>
+  			</div>          
+
+	       <div class="cont_form_sign_up">
+		    <a href="#" onclick="ocultar_login_sign_up()"><i class="material-icons">뒤로</i></a>
+	         <h2>LOGIN</h2>
+	         <form id='vendorForm'>
+	            <input type="text" name="id"  placeholder="ID를 입력하세요" />
+	            <input type="password" name="pw" placeholder="Password를 입력하세요" 
+	            onkeypress="if(event.keyCode==13) javascript:vendorlogin();"/>
+	            <button class="btn_sign_up" type="button" onclick="vendorlogin();">LOGIN</button>
+	           </form>
+	        </div>
+		</div>
+	</div>
+  </div>
+</div>
+
+</body>
+</html>

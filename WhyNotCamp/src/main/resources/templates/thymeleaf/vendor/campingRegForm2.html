@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>캠핑지 등록 2단계</title>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+var checkUnload = true;
+$(window).on("beforeunload", function(){
+    if(checkUnload) return "이 페이지를 벗어나면 작성된 내용은 저장되지 않습니다.";
+});
+
+function unbind(){
+    checkUnload = false;
+};
+	
+	function register()
+	{
+		var form = $('#facilities')[0];
+		var formData = new FormData(form);
+		
+		if(confirm('등록 하시겠습니까?')){
+			$.ajax({
+		 		url : '/vendor/reg2',
+		 		method:'post',
+		 		contentType : false ,
+		 		processData : false,
+		 		enctype: 'multipart/form-data',
+		 		data : formData,
+		 		dataType : 'text',
+		 		timeout: 600000,
+		 		success : function(res)	{
+		 			if(res){
+		 				alert('등록 성공')
+		 			}
+		 			location.href='/vendor/main';
+		 		},
+		 		error : function(xhr,status,err){
+		 			alert(err);
+		 		}
+		 	});
+	 	}
+	}
+</script>
+</head>
+<body>
+	<main>
+		<form id="facilities">
+			<div>
+			  	<h5>부대시설 체크</h5>
+			  		<span>와이파이</span>
+					<label><input type="radio" name="wifi" value="1">있음</label>
+					<label><input type="radio" name="wifi" value="0" checked="checked">없음</label><br>
+					<span>반려동물</span>
+					<label><input type="radio" name="pet" value="1">가능</label>
+					<label><input type="radio" name="pet" value="0" checked="checked">불가능</label><br>
+					<span>취사가능</span>
+					<label><input type="radio" name="cook" value="1">가능</label>
+					<label><input type="radio" name="cook" value="0" checked="checked">불가능</label><br>
+					<span>바베큐</span>
+					<label><input type="radio" name="bbq" value="1">있음</label>
+					<label><input type="radio" name="bbq" value="0" checked="checked">없음</label><br>
+					<span>캠프파이어</span>
+					<label><input type="radio" name="fire" value="1">있음</label>
+					<label><input type="radio" name="fire" value="0" checked="checked">없음</label><br>
+					<span>화장실</span>
+					<label><input type="radio" name="toilet" value="1">있음</label>
+					<label><input type="radio" name="toilet" value="0" checked="checked">없음</label><br>
+			 </div>
+			 캠핑장 사진파일 <input type="file" name="cfiles" multiple="multiple"><br>
+			 캠핑장 약도 파일 <input type="file" name="map"><br>
+		</form>
+		
+		<input type="button" onclick="unbind(); register();" value="등록">
+	</main>
+</body>
+</html>
